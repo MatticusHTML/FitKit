@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fit Kit — Kate's Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c1409;--surface:#131d0f;--surface-2:#1c2b16;--surface-3:#243820;--cream:#f0ead8;--cream-muted:#a89e82;--orange:#e05518;--orange-bright:#ff6b35;--green:#4a8c3f;--green-bright:#72c063;--gold:#c9943a;--gold-bright:#e8b44e;--muted:#4d6245;--border:#253520;--border-bright:#3d5438;--red:#c43b2a;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;font-weight:400;line-height:1.6;min-height:100vh;overflow-x:hidden}
+.hero{position:relative;padding:72px 40px 52px;text-align:center;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(74,140,63,.18) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--green-bright);margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:12px}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';height:1px;width:40px;background:var(--green)}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(70px,11vw,136px);font-weight:900;line-height:.9;letter-spacing:-.02em}
+.hero-title span{color:var(--orange-bright);font-style:italic}
+.hero-subtitle{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(17px,2.5vw,26px);color:var(--cream-muted);margin-top:14px}
+.hero-for{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+.hero-for strong{color:var(--gold-bright);font-weight:600}
+.hero-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.hero-tag{padding:4px 13px;border:1px solid var(--border-bright);border-radius:20px;font-size:12px;color:var(--cream-muted)}
+.hero-tag.hot{border-color:var(--orange);color:var(--orange-bright)}
+.hero-tag.fav{border-color:var(--green);color:var(--green-bright)}
+.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(12,20,9,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-tabs{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 32px}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:17px 24px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;transition:all .2s;white-space:nowrap}
+.nav-tab:hover{color:var(--cream)}
+.nav-tab.active{color:var(--orange-bright);border-bottom-color:var(--orange-bright)}
+.filter-toolbar{padding:14px 32px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.filter-toolbar.hidden{display:none}
+.filter-trigger-wrap{position:relative}
+.filter-trigger{display:flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid var(--border-bright);border-radius:8px;background:var(--surface-2);color:var(--cream-muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
+.filter-trigger:hover,.filter-trigger.open{border-color:var(--orange);color:var(--cream)}
+.filter-trigger .arrow{font-size:10px;transition:transform .2s;display:inline-block}
+.filter-trigger.open .arrow{transform:rotate(180deg)}
+.count-chip{background:var(--orange);color:#fff;border-radius:10px;padding:0 7px;font-size:11px;font-weight:700;line-height:18px;display:none}
+.filter-panel{position:absolute;top:calc(100% + 8px);left:0;z-index:200;background:var(--surface-2);border:1px solid var(--border-bright);border-radius:12px;padding:20px;min-width:320px;box-shadow:0 16px 48px rgba(0,0,0,.5);display:none}
+.filter-panel.open{display:block;animation:dropIn .18s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.filter-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.filter-panel-title{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.filter-clear-btn{font-size:12px;color:var(--orange-bright);cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;font-weight:500;padding:0}
+.filter-clear-btn:hover{text-decoration:underline}
+.filter-section{margin-bottom:14px}
+.filter-section:last-child{margin-bottom:0}
+.filter-section-label{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap}
+.filter-chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border-bright);background:transparent;color:var(--cream-muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;user-select:none}
+.filter-chip:hover{border-color:var(--cream-muted);color:var(--cream)}
+.filter-chip.selected{background:var(--orange);border-color:var(--orange);color:#fff}
+.filter-chip.selected.skill-beginner{background:var(--green);border-color:var(--green)}
+.filter-chip.selected.skill-comfortable{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.filter-chip.selected.skill-experienced{background:var(--red);border-color:var(--red)}
+.filter-chip.selected.time-morning{background:#c07838;border-color:#c07838}
+.filter-chip.selected.time-evening{background:#4a6abf;border-color:#4a6abf}
+.filter-chip.selected.time-snack{background:var(--green);border-color:var(--green)}
+.time-section{display:none}
+.time-section.show{display:block}
+.active-filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.active-pill{display:flex;align-items:center;gap:5px;padding:4px 10px 4px 12px;border-radius:20px;background:rgba(224,85,24,.15);border:1px solid var(--orange);font-size:12px;color:var(--orange-bright)}
+.active-pill button{background:none;border:none;color:var(--orange-bright);cursor:pointer;font-size:16px;line-height:1;padding:0;display:flex;align-items:center}
+.filter-count-label{font-size:12px;color:var(--muted);margin-left:auto}
+.section{display:none;padding:44px 32px;max-width:1200px;margin:0 auto}
+.section.active{display:block;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.section-header{margin-bottom:36px}
+.section-label{font-size:11px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--green-bright);margin-bottom:8px}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(34px,5vw,54px);font-weight:700;line-height:1}
+.section-title em{font-style:italic;color:var(--cream-muted)}
+.section-desc{color:var(--cream-muted);margin-top:10px;max-width:520px;font-size:14px}
+.meal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.meal-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s}
+.meal-card.hidden{display:none}
+.meal-card:hover{border-color:var(--border-bright)}
+.meal-card-inner{padding:26px}
+.meal-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.badge{padding:3px 9px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.badge-skill-beginner{background:rgba(74,140,63,.2);color:var(--green-bright);border:1px solid rgba(74,140,63,.4)}
+.badge-skill-comfortable{background:rgba(201,148,58,.2);color:var(--gold-bright);border:1px solid rgba(201,148,58,.4)}
+.badge-skill-experienced{background:rgba(196,59,42,.2);color:#f07060;border:1px solid rgba(196,59,42,.4)}
+.badge-cheap{background:rgba(74,140,63,.08);color:var(--green-bright);border:1px solid var(--border)}
+.badge-moderate{background:rgba(201,148,58,.08);color:var(--gold-bright);border:1px solid var(--border)}
+.badge-prep{background:rgba(114,192,99,.08);color:var(--green-bright);border:1px solid var(--green)}
+.badge-kate{background:rgba(201,148,58,.12);color:var(--gold-bright);border:1px solid rgba(201,148,58,.3)}
+.badge-habanero{background:rgba(224,85,24,.18);color:var(--orange-bright);border:1px solid rgba(224,85,24,.5)}
+.badge-smoothie{background:rgba(74,180,220,.15);color:#6dd4f0;border:1px solid rgba(74,180,220,.4)}
+.badge-rice{background:rgba(201,148,58,.1);color:var(--gold-bright);border:1px solid rgba(201,148,58,.35)}
+.badge-time-evening{background:rgba(74,106,191,.15);color:#8099e8;border:1px solid rgba(74,106,191,.4)}
+.badge-time-snack{background:rgba(74,140,63,.12);color:var(--green-bright);border:1px solid rgba(74,140,63,.35)}
+.heat-dots{display:flex;gap:3px;align-items:center}
+.heat-dot{width:7px;height:7px;border-radius:50%;background:var(--border-bright)}
+.heat-dot.on{background:var(--orange-bright)}
+.meal-name{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;line-height:1.2;margin-bottom:5px}
+.meal-tagline{font-size:13px;color:var(--cream-muted);font-style:italic;margin-bottom:14px}
+.meal-meta{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-bottom:18px;flex-wrap:wrap}
+.expand-btn{width:100%;padding:11px 18px;background:var(--surface-2);border:1px solid var(--border-bright);border-radius:8px;color:var(--cream-muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.expand-btn:hover{background:var(--surface-3);color:var(--cream);border-color:var(--orange)}
+.expand-btn svg{transition:transform .3s;flex-shrink:0}
+.expand-btn.open svg{transform:rotate(180deg)}
+.meal-detail{display:none;border-top:1px solid var(--border);margin-top:18px;padding-top:20px}
+.meal-detail.open{display:block;animation:fadeIn .22s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.detail-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:18px;flex-wrap:wrap;gap:0}
+.detail-tabs::-webkit-scrollbar{display:none}
+.detail-tab{padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;transition:all .15s;white-space:nowrap;margin-bottom:-1px}
+.detail-tab.active{color:var(--orange-bright);border-bottom-color:var(--orange-bright)}
+.detail-pane{display:none}
+.detail-pane.active{display:block}
+.ingredients-table{width:100%;border-collapse:collapse;font-size:13px}
+.ingredients-table th{text-align:left;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:5px 8px;border-bottom:1px solid var(--border)}
+.ingredients-table td{padding:9px 8px;border-bottom:1px solid var(--border);color:var(--cream);vertical-align:top}
+.ingredients-table td:first-child{font-weight:500}
+.ingredients-table td:nth-child(2){color:var(--cream-muted);text-align:right;white-space:nowrap;padding-left:12px}
+.ingredients-table td:nth-child(3){color:var(--muted);font-size:11px}
+.ingredients-table tr:last-child td{border-bottom:none}
+.instruction-step{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--border)}
+.instruction-step:last-child{border-bottom:none}
+.step-num{width:25px;height:25px;border-radius:50%;border:1px solid var(--orange);color:var(--orange-bright);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px}
+.step-text{font-size:13.5px;color:var(--cream);line-height:1.65}
+.nutrition-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+.nutrition-card{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:14px}
+.nutrition-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.nutrition-value{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;line-height:1}
+.nutrition-value span{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--cream-muted);font-weight:400;margin-left:2px}
+.bar-wrap{margin-top:14px}
+.bar-row{margin-bottom:9px}
+.bar-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--cream-muted);margin-bottom:3px}
+.bar{height:5px;background:var(--border-bright);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px}
+.bar-protein{background:var(--green-bright)}
+.bar-carbs{background:var(--gold-bright)}
+.bar-fat{background:var(--orange-bright)}
+.bar-fiber{background:#6ab5d4}
+.benefit-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--cream-muted);line-height:1.6}
+.benefit-item:last-child{border-bottom:none}
+.benefit-icon{color:var(--green-bright);flex-shrink:0;margin-top:2px}
+.empty-state{text-align:center;padding:72px 32px;color:var(--muted);display:none}
+.empty-state.show{display:block}
+.empty-state h3{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:8px;color:var(--cream-muted)}
+.fitness-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:36px}
+.fitness-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px}
+.fitness-card-icon{font-size:26px;margin-bottom:12px}
+.fitness-card-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;margin-bottom:9px}
+.fitness-card-body{font-size:13.5px;color:var(--cream-muted);line-height:1.7}
+.fitness-card-body li{margin-left:16px;margin-bottom:3px}
+.fitness-accent{border-color:var(--orange);background:linear-gradient(135deg,var(--surface),rgba(224,85,24,.06))}
+.schedule-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:22px}
+.schedule-header{padding:18px 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.schedule-header h3{font-family:'Playfair Display',serif;font-size:19px;font-weight:700}
+.schedule-row{display:grid;grid-template-columns:110px 1fr;border-bottom:1px solid var(--border)}
+.schedule-row:last-child{border-bottom:none}
+.schedule-day{padding:14px 18px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--border)}
+.schedule-day.active-day{color:var(--orange-bright)}
+.schedule-activity{padding:14px 22px;font-size:13.5px;color:var(--cream-muted)}
+.schedule-activity strong{color:var(--cream);font-weight:600}
+.tips-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.tip-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:15px 18px;font-size:13.5px;color:var(--cream-muted);display:flex;gap:12px;align-items:flex-start}
+.tip-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--green);line-height:1;flex-shrink:0}
+.footer{border-top:1px solid var(--border);padding:28px 32px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.footer span{color:var(--orange)}
+@media(max-width:768px){.hero{padding:52px 20px 36px}.section{padding:32px 16px}.filter-toolbar{padding:12px 16px}.nav-tabs{padding:0 16px}.meal-grid{grid-template-columns:1fr}.filter-panel{min-width:260px}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-eyebrow">A Guide Built With Love</div>
+  <h1 class="hero-title">Fit<span>Kit</span></h1>
+  <p class="hero-subtitle">Your plant-powered, flavor-forward, feel-good life.</p>
+  <p class="hero-for">Crafted for <strong>Kate</strong> — gluten-free · vegan · smoothie lover · rice enthusiast</p>
+  <div class="hero-tags">
+    <span class="hero-tag fav">🫙 Pickles</span>
+    <span class="hero-tag fav">🫒 Olives</span>
+    <span class="hero-tag fav">🥒 Pickled Okra</span>
+    <span class="hero-tag fav">🍚 Rice</span>
+    <span class="hero-tag fav">🥤 Smoothies</span>
+    <span class="hero-tag hot">🌶️ Spicy 3–5x/week</span>
+    <span class="hero-tag">No Gluten</span>
+    <span class="hero-tag">No Dairy</span>
+    <span class="hero-tag">No Meat</span>
+  </div>
+</header>
+<nav class="sticky-nav">
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('all',this)">🍽 All Food</button>
+    <button class="nav-tab" onclick="switchTab('morning',this)">🌅 Morning</button>
+    <button class="nav-tab" onclick="switchTab('evening',this)">🌙 Evening</button>
+    <button class="nav-tab" onclick="switchTab('snacks',this)">🔥 Snacks</button>
+    <button class="nav-tab" onclick="switchTab('fitness',this)">💪 Fitness Guide</button>
+  </div>
+</nav>
+<div class="filter-toolbar" id="filterToolbar">
+  <div class="filter-trigger-wrap" id="filterTriggerWrap">
+    <button class="filter-trigger" id="filterTrigger" onclick="toggleFilterPanel(event)">
+      <span>🔍 Filters</span>
+      <span class="count-chip" id="filterCountChip">0</span>
+      <span class="arrow">▾</span>
+    </button>
+    <div class="filter-panel" id="filterPanel">
+      <div class="filter-panel-header">
+        <span class="filter-panel-title">Filter Meals</span>
+        <button class="filter-clear-btn" onclick="clearAllFilters()">Clear All</button>
+      </div>
+      <div class="filter-section time-section show" id="timeSectionEl">
+        <div class="filter-section-label">Meal Time</div>
+        <div class="filter-chips">
+          <div class="filter-chip time-morning" data-group="time" data-value="morning" onclick="toggleChip(this)">🌅 Morning</div>
+          <div class="filter-chip time-evening" data-group="time" data-value="evening" onclick="toggleChip(this)">🌙 Evening</div>
+          <div class="filter-chip time-snack" data-group="time" data-value="snack" onclick="toggleChip(this)">🔥 Snack</div>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-label">Skill Level</div>
+        <div class="filter-chips">
+          <div class="filter-chip skill-beginner" data-group="skill" data-value="beginner" onclick="toggleChip(this)">Beginner</div>
+          <div class="filter-chip skill-comfortable" data-group="skill" data-value="comfortable" onclick="toggleChip(this)">Comfortable</div>
+          <div class="filter-chip skill-experienced" data-group="skill" data-value="experienced" onclick="toggleChip(this)">Experienced</div>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-label">Budget</div>
+        <div class="filter-chips">
+          <div class="filter-chip" data-group="budget" data-value="cheap" onclick="toggleChip(this)">💚 Cheap</div>
+          <div class="filter-chip" data-group="budget" data-value="moderate" onclick="toggleChip(this)">🟡 Moderate</div>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-label">Features</div>
+        <div class="filter-chips">
+          <div class="filter-chip" data-group="feature" data-value="habanero" onclick="toggleChip(this)">🌶️ Habanero</div>
+          <div class="filter-chip" data-group="feature" data-value="smoothie" onclick="toggleChip(this)">🥤 Smoothie</div>
+          <div class="filter-chip" data-group="feature" data-value="rice" onclick="toggleChip(this)">🍚 Rice Dish</div>
+          <div class="filter-chip" data-group="feature" data-value="weekendPrep" onclick="toggleChip(this)">🗓 Weekend Prep</div>
+          <div class="filter-chip" data-group="feature" data-value="kate" onclick="toggleChip(this)">🫒 Kate Favorites</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="active-filters" id="activePills"></div>
+  <span class="filter-count-label" id="visibleCount"></span>
+</div>
+<section class="section active" id="tab-all">
+  <div class="section-header">
+    <div class="section-label">Every Recipe · All Times of Day</div>
+    <h2 class="section-title">All <em>Food</em></h2>
+    <p class="section-desc">The full cookbook. Filter by any combination of meal time, skill level, budget, or features.</p>
+  </div>
+  <div class="meal-grid" id="all-grid"></div>
+  <div class="empty-state" id="all-empty"><h3>No dishes match your filters</h3><p>Try clearing a few filters to see more options.</p></div>
+</section>
+<section class="section" id="tab-morning">
+  <div class="section-header">
+    <div class="section-label">First Meal · ~10am–12pm</div>
+    <h2 class="section-title">Morning <em>Meal</em></h2>
+    <p class="section-desc">Start with protein and fiber. This first meal sets the tone for the entire day.</p>
+  </div>
+  <div class="meal-grid" id="morning-grid"></div>
+  <div class="empty-state" id="morning-empty"><h3>No dishes match</h3><p>Try clearing some filters.</p></div>
+</section>
+<section class="section" id="tab-evening">
+  <div class="section-header">
+    <div class="section-label">Second Meal · ~6pm–8pm</div>
+    <h2 class="section-title">Evening <em>Meal</em></h2>
+    <p class="section-desc">Your most satisfying meal. High protein on workout days, lighter on rest days.</p>
+  </div>
+  <div class="meal-grid" id="evening-grid"></div>
+  <div class="empty-state" id="evening-empty"><h3>No dishes match</h3><p>Try clearing some filters.</p></div>
+</section>
+<section class="section" id="tab-snacks">
+  <div class="section-header">
+    <div class="section-label">Between Meals · Anytime</div>
+    <h2 class="section-title">Snacks <em>&amp; Boards</em></h2>
+    <p class="section-desc">Keep 2–3 prepped at all times. These protect muscle and satisfy the crunch craving.</p>
+  </div>
+  <div class="meal-grid" id="snacks-grid"></div>
+  <div class="empty-state" id="snacks-empty"><h3>No snacks match</h3><p>Try clearing some filters.</p></div>
+</section>
+<section class="section" id="tab-fitness">
+  <div class="section-header">
+    <div class="section-label">Movement &amp; Method</div>
+    <h2 class="section-title">Fitness <em>Framework</em></h2>
+    <p class="section-desc">Moderate, sustainable, built for weight loss first — with muscle tone developing naturally as you go.</p>
+  </div>
+  <div class="fitness-grid">
+    <div class="fitness-card fitness-accent"><div class="fitness-card-icon">🎯</div><div class="fitness-card-title">The Core Strategy</div><div class="fitness-card-body">Your goal is <strong style="color:var(--cream)">fat loss while preserving and toning muscle</strong>. The formula: a moderate calorie deficit (~300–400 kcal below maintenance), compound strength movements 3x/week, and active cardio on off days. Muscle burns more calories at rest — building it while losing fat is the smartest long game.</div></div>
+    <div class="fitness-card"><div class="fitness-card-icon">🏋️</div><div class="fitness-card-title">Strength Focus Areas</div><div class="fitness-card-body"><ul><li>Squats &amp; lunges — biggest muscle groups, biggest calorie burn</li><li>Deadlifts &amp; Romanian deadlifts — posterior chain + glutes</li><li>Push movements (push-ups, overhead press)</li><li>Pull movements (rows, lat pulldowns)</li><li>Core planks &amp; dead bugs — not crunches</li></ul></div></div>
+    <div class="fitness-card"><div class="fitness-card-icon">🫀</div><div class="fitness-card-title">Cardio That Works</div><div class="fitness-card-body">Skip long, slow treadmill sessions.<br><br><strong style="color:var(--cream)">HIIT (2x/week):</strong> 15–20 min, high intensity.<br><br><strong style="color:var(--cream)">Walking (daily):</strong> 7,000+ steps. Low-intensity fat burning without muscle breakdown.</div></div>
+    <div class="fitness-card"><div class="fitness-card-icon">💤</div><div class="fitness-card-title">Recovery Is Non-Negotiable</div><div class="fitness-card-body">Muscles grow when you rest.<ul><li>7–9 hours of sleep every night</li><li>Stretch or foam roll on rest days</li><li>At least 1 full rest day per week</li><li>2.5–3L of water daily</li></ul></div></div>
+    <div class="fitness-card"><div class="fitness-card-icon">🥗</div><div class="fitness-card-title">Protein: The Most Important Rule</div><div class="fitness-card-body">Target <strong style="color:var(--cream)">100–120g of protein daily</strong>. Protein at every meal AND snack. Top sources in this kit: tofu, edamame, lentils, chickpeas, black beans, hemp seeds, pea protein.</div></div>
+    <div class="fitness-card"><div class="fitness-card-icon">📈</div><div class="fitness-card-title">Progressive Overload</div><div class="fitness-card-body">Each week, add something:<ul><li>Add 5 lbs to your lift</li><li>Add 1 extra rep per set</li><li>Reduce rest time by 15 seconds</li><li>Add one more set total</li></ul></div></div>
+  </div>
+
+  <!-- MACRO TARGETS -->
+  <div class="section-label" style="margin-bottom:16px">📊 Your Daily Macro Targets</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px">
+    <div style="padding:20px 26px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
+      <span style="font-size:20px">⚖️</span>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700">Fat Loss + Muscle Maintenance Target</div>
+        <div style="font-size:13px;color:var(--cream-muted);margin-top:2px">Moderate activity level · Plant-based · ~300–400 kcal daily deficit</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0">
+      <div style="padding:20px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Daily Calories</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--cream);line-height:1">1,600<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--cream-muted);font-weight:400">–1,800</span></div>
+        <div style="font-size:12px;color:var(--cream-muted);margin-top:4px">kcal/day</div>
+      </div>
+      <div style="padding:20px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Protein</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--green-bright);line-height:1">100<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--cream-muted);font-weight:400">–120g</span></div>
+        <div style="font-size:12px;color:var(--cream-muted);margin-top:4px">~25–30% of calories · muscle repair &amp; retention</div>
+      </div>
+      <div style="padding:20px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Carbohydrates</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--gold-bright);line-height:1">160<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--cream-muted);font-weight:400">–200g</span></div>
+        <div style="font-size:12px;color:var(--cream-muted);margin-top:4px">~40–45% of calories · fuel for training</div>
+      </div>
+      <div style="padding:20px 24px;border-bottom:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Fats</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--orange-bright);line-height:1">50<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--cream-muted);font-weight:400">–65g</span></div>
+        <div style="font-size:12px;color:var(--cream-muted);margin-top:4px">~30% of calories · hormones &amp; absorption</div>
+      </div>
+      <div style="padding:20px 24px;border-right:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Fiber</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:#6ab5d4;line-height:1">28<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--cream-muted);font-weight:400">–35g</span></div>
+        <div style="font-size:12px;color:var(--cream-muted);margin-top:4px">gut health, fullness, blood sugar</div>
+      </div>
+      <div style="padding:20px 24px;border-right:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Water</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--cream);line-height:1">2.5<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--cream-muted);font-weight:400">–3L</span></div>
+        <div style="font-size:12px;color:var(--cream-muted);margin-top:4px">more on workout days</div>
+      </div>
+      <div style="padding:20px 24px;border-right:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Sodium</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--cream-muted);line-height:1">&lt;2,300<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--cream-muted);font-weight:400">mg</span></div>
+        <div style="font-size:12px;color:var(--cream-muted);margin-top:4px">mindful with pickles &amp; tamari</div>
+      </div>
+      <div style="padding:20px 24px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Spicy Meals</div>
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--orange-bright);line-height:1">3<span style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--cream-muted);font-weight:400">–5x</span></div>
+        <div style="font-size:12px;color:var(--cream-muted);margin-top:4px">per week target · thermogenic boost</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MICRO TARGETS -->
+  <div class="section-label" style="margin-bottom:16px">🔬 Key Micronutrients for Plant-Based Women</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px">
+    <div style="padding:16px 24px;border-bottom:1px solid var(--border);font-size:13px;color:var(--cream-muted)">These are the micronutrients most commonly under-consumed on a plant-based diet. Nail these and everything else falls into place.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
+      <div style="padding:18px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;color:var(--cream)">Iron</span>
+          <span style="font-size:12px;background:rgba(196,59,42,.2);color:#f07060;border:1px solid rgba(196,59,42,.4);border-radius:4px;padding:2px 8px">Critical</span>
+        </div>
+        <div style="font-size:13px;color:var(--cream-muted);line-height:1.6"><strong style="color:var(--gold-bright)">Target: 18mg/day</strong> (women need 1.8× more than men on plant-based diets). Best sources in this kit: lentils, tofu, edamame, pumpkin seeds. Always pair with vitamin C (lime, bell pepper) to boost absorption by up to 3×. Avoid coffee/tea within 1 hour of iron-rich meals.</div>
+      </div>
+      <div style="padding:18px 24px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;color:var(--cream)">Vitamin B12</span>
+          <span style="font-size:12px;background:rgba(196,59,42,.2);color:#f07060;border:1px solid rgba(196,59,42,.4);border-radius:4px;padding:2px 8px">Supplement</span>
+        </div>
+        <div style="font-size:13px;color:var(--cream-muted);line-height:1.6"><strong style="color:var(--gold-bright)">Target: 2.4mcg/day</strong> — impossible to get adequately from plants alone. This is the #1 supplement for any plant-based eater. Take a methylcobalamin B12 supplement daily or eat nutritional yeast regularly (it's in the popcorn recipe). Deficiency causes fatigue, brain fog, and nerve damage over time.</div>
+      </div>
+      <div style="padding:18px 24px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;color:var(--cream)">Vitamin D</span>
+          <span style="font-size:12px;background:rgba(196,59,42,.2);color:#f07060;border:1px solid rgba(196,59,42,.4);border-radius:4px;padding:2px 8px">Supplement</span>
+        </div>
+        <div style="font-size:13px;color:var(--cream-muted);line-height:1.6"><strong style="color:var(--gold-bright)">Target: 1,000–2,000 IU/day</strong> via D3 supplement (vegan D3 from lichen exists). Vitamin D controls calcium absorption, immune defense, mood regulation, and muscle function. Most people in the US are deficient. Get bloodwork done — your doctor can give you a personalized dose.</div>
+      </div>
+      <div style="padding:18px 24px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;color:var(--cream)">Calcium</span>
+          <span style="font-size:12px;background:rgba(201,148,58,.2);color:var(--gold-bright);border:1px solid rgba(201,148,58,.4);border-radius:4px;padding:2px 8px">Monitor</span>
+        </div>
+        <div style="font-size:13px;color:var(--cream-muted);line-height:1.6"><strong style="color:var(--gold-bright)">Target: 1,000mg/day</strong>. Best plant sources: fortified oat or almond milk (~300mg/cup), edamame (175mg/cup), tahini (130mg/2 tbsp), bok choy, broccoli. Given lactose sensitivity, fortified plant milks are your main lever here. Check labels — calcium content varies widely by brand.</div>
+      </div>
+      <div style="padding:18px 24px;border-right:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;color:var(--cream)">Zinc</span>
+          <span style="font-size:12px;background:rgba(201,148,58,.2);color:var(--gold-bright);border:1px solid rgba(201,148,58,.4);border-radius:4px;padding:2px 8px">Monitor</span>
+        </div>
+        <div style="font-size:13px;color:var(--cream-muted);line-height:1.6"><strong style="color:var(--gold-bright)">Target: 8mg/day</strong> (but 12–15mg recommended for plant-based due to lower bioavailability). Critical for immune defense, skin healing, and muscle repair. Best sources in this kit: pepitas (pumpkin seeds) are the #1 plant source, followed by hemp seeds, chickpeas, and lentils.</div>
+      </div>
+      <div style="padding:18px 24px;border-right:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;color:var(--cream)">Omega-3 (ALA)</span>
+          <span style="font-size:12px;background:rgba(74,140,63,.2);color:var(--green-bright);border:1px solid rgba(74,140,63,.4);border-radius:4px;padding:2px 8px">In the Kit</span>
+        </div>
+        <div style="font-size:13px;color:var(--cream-muted);line-height:1.6"><strong style="color:var(--gold-bright)">Target: 1.1g ALA/day</strong> minimum, but consider an algae-based DHA/EPA supplement for full benefit. Best sources in this kit: ground flaxseed (2.3g/tbsp), chia seeds (5g/oz), hemp seeds (1g/tbsp), walnuts. ALA from plants converts to DHA/EPA at only ~5–15%, so an algae supplement fills the gap.</div>
+      </div>
+      <div style="padding:18px 24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;color:var(--cream)">Iodine</span>
+          <span style="font-size:12px;background:rgba(201,148,58,.2);color:var(--gold-bright);border:1px solid rgba(201,148,58,.4);border-radius:4px;padding:2px 8px">Monitor</span>
+        </div>
+        <div style="font-size:13px;color:var(--cream-muted);line-height:1.6"><strong style="color:var(--gold-bright)">Target: 150mcg/day</strong>. Iodine regulates thyroid hormones that control metabolism — a big deal for weight loss. Most plant-based eaters are deficient. Use iodized sea salt, add seaweed snacks occasionally, or take a supplement with iodine. Dairy was most people's main source; removing it means you need to replace it.</div>
+      </div>
+      <div style="padding:18px 24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-weight:700;color:var(--cream)">Magnesium</span>
+          <span style="font-size:12px;background:rgba(74,140,63,.2);color:var(--green-bright);border:1px solid rgba(74,140,63,.4);border-radius:4px;padding:2px 8px">In the Kit</span>
+        </div>
+        <div style="font-size:13px;color:var(--cream-muted);line-height:1.6"><strong style="color:var(--gold-bright)">Target: 310–320mg/day</strong>. Magnesium powers 300+ enzymatic reactions including muscle contraction, nerve function, and sleep regulation. Best sources: dark leafy greens, black beans, edamame, pumpkin seeds, dark chocolate (GF). Most people are mildly deficient — a magnesium glycinate supplement at bedtime also improves sleep quality.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPLEMENT STACK -->
+  <div class="section-label" style="margin-bottom:16px">💊 Recommended Supplement Stack</div>
+  <div class="tips-list" style="margin-bottom:32px">
+    <div class="tip-item"><span class="tip-num" style="color:var(--red)">①</span><span><strong style="color:var(--cream)">B12 (Methylcobalamin)</strong> — 1,000mcg daily or 2,500mcg 3x/week. Non-negotiable on plant-based. This is the one supplement you cannot skip.</span></div>
+    <div class="tip-item"><span class="tip-num" style="color:var(--orange-bright)">②</span><span><strong style="color:var(--cream)">Vitamin D3 (vegan)</strong> — 1,000–2,000 IU daily with your fattiest meal for best absorption. Get bloodwork first to determine your actual level.</span></div>
+    <div class="tip-item"><span class="tip-num" style="color:var(--gold-bright)">③</span><span><strong style="color:var(--cream)">Algae-based DHA/EPA</strong> — 250–500mg combined DHA+EPA daily. This is where fish get their omega-3s from — skip the middleman and go straight to the source.</span></div>
+    <div class="tip-item"><span class="tip-num" style="color:var(--green-bright)">④</span><span><strong style="color:var(--cream)">Magnesium Glycinate</strong> — 200–400mg before bed. Improves sleep quality, reduces muscle cramps, supports recovery. Glycinate form is gentlest on digestion.</span></div>
+    <div class="tip-item"><span class="tip-num" style="color:var(--blue,#4a8fb5)">⑤</span><span><strong style="color:var(--cream)">Iodine</strong> — 150mcg daily if you are not regularly using iodized salt. Important for thyroid and metabolic function, often overlooked on plant-based diets.</span></div>
+    <div class="tip-item"><span class="tip-num" style="color:var(--cream-muted)">⑥</span><span><strong style="color:var(--cream)">Creatine Monohydrate</strong> — 3–5g daily (optional but evidence-backed). Increases strength, muscle recovery, and cognitive function. Especially beneficial for plant-based athletes who get zero creatine from food.</span></div>
+  </div>
+  <div class="schedule-wrap">
+    <div class="schedule-header"><span style="font-size:20px">🗓</span><h3>Kate's Weekly Blueprint</h3></div>
+    <div class="schedule-row"><div class="schedule-day active-day">Monday</div><div class="schedule-activity"><strong>Strength</strong> — Lower body (squats, lunges, deadlifts). 3×10–12 reps. 45 min.</div></div>
+    <div class="schedule-row"><div class="schedule-day">Tuesday</div><div class="schedule-activity"><strong>HIIT Cardio</strong> — 20 min circuit + 7,000+ steps walking.</div></div>
+    <div class="schedule-row"><div class="schedule-day active-day">Wednesday</div><div class="schedule-activity"><strong>Strength</strong> — Upper body (push-ups, rows, overhead press, planks). 3×10–12 reps.</div></div>
+    <div class="schedule-row"><div class="schedule-day">Thursday</div><div class="schedule-activity"><strong>Active Recovery</strong> — 30 min light walk + stretching or yoga.</div></div>
+    <div class="schedule-row"><div class="schedule-day active-day">Friday</div><div class="schedule-activity"><strong>Strength</strong> — Full body compound circuit. 3 rounds. 50 min.</div></div>
+    <div class="schedule-row"><div class="schedule-day">Saturday</div><div class="schedule-activity"><strong>Meal Prep Day 🗓</strong> — Batch-cook your weekend prep meals. Active rest.</div></div>
+    <div class="schedule-row"><div class="schedule-day">Sunday</div><div class="schedule-activity"><strong>Full Rest</strong> — Regeneration. Prioritize 8+ hours sleep.</div></div>
+  </div>
+  <div class="section-label" style="margin-bottom:14px">Bonus Tips</div>
+  <div class="tips-list">
+    <div class="tip-item"><span class="tip-num">01</span><span>Eat your morning meal within 2 hours of waking to kickstart metabolism — even a smoothie counts perfectly.</span></div>
+    <div class="tip-item"><span class="tip-num">02</span><span>Aim for 3–5 spicy meals per week, not every meal. Capsaicin works best when it surprises your system — daily use reduces its thermogenic effect.</span></div>
+    <div class="tip-item"><span class="tip-num">03</span><span>Rice is your friend. Cooled cooked rice develops resistant starch that feeds gut bacteria and has a lower glycemic impact than freshly cooked.</span></div>
+    <div class="tip-item"><span class="tip-num">04</span><span>Crunchy food requires more chewing, which slows eating and gives your brain time to register fullness. Never apologize for preferring crispy.</span></div>
+    <div class="tip-item"><span class="tip-num">05</span><span>Pickles and fermented foods support the gut microbiome, directly linked to easier weight management and reduced bloating.</span></div>
+    <div class="tip-item"><span class="tip-num">06</span><span>Smoothies are a legitimate high-protein meal — not just a snack. Add protein powder, hemp seeds, or nut butter to make them meal-worthy.</span></div>
+  </div>
+</section>
+<footer class="footer"><p>Fit Kit · Built with <span>🌶️</span> for Kate · Gluten-Free · Fully Plant-Based · Always Crunchy</p></footer>
+<script>
+const ALL_MEALS=[
+{id:'m1',category:'morning',name:'Habanero Mango Black Bean Bowl',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:true,heat:3,kate:[],tagline:'Tropical fire meets hearty crunch.',prepTime:'10 min',cookTime:'0 min',servings:1,ingredients:[{item:'Black beans (canned)',amount:'1 can (15oz)',shelf:'2–3 years sealed'},{item:'Fresh mango',amount:'1 medium',shelf:'3–5 days at room temp'},{item:'Habanero pepper',amount:'1–2',shelf:'1–2 weeks refrigerated'},{item:'Red onion',amount:'¼ cup, diced',shelf:'2–3 weeks'},{item:'Fresh cilantro',amount:'¼ cup',shelf:'5–7 days'},{item:'Lime',amount:'1',shelf:'2–4 weeks refrigerated'},{item:'GF corn tortilla chips',amount:'1 oz',shelf:'2–3 months sealed'},{item:'Pickled jalapeños',amount:'2 tbsp',shelf:'12 months unopened / 3 months open'}],instructions:['Drain and rinse black beans. Season with salt and a squeeze of lime.','Wearing gloves, finely mince the habanero. Keep seeds for nuclear heat, remove for very spicy.','Mix diced mango, habanero, red onion, and cilantro. Squeeze lime over top — your fire salsa.','Spoon beans into a bowl. Pile the mango habanero salsa on top.','Add pickled jalapeños, then crush corn chips directly over everything for crunch.','Finish with a final lime squeeze. Eat immediately while chips are crispy.'],nutrition:{calories:420,protein:18,carbs:65,fat:8,fiber:14},benefits:['Black beans deliver complete plant protein + slow-burn complex carbs for sustained morning energy.','Habanero capsaicin is thermogenic — raises your core temp and boosts metabolism.','Mango is loaded with digestive enzymes (amylase) and vitamin C supporting immunity.','At 14g fiber, this keeps you satiated for hours and stabilizes blood sugar.']},
+{id:'m2',category:'morning',name:'Crispy Chickpea & Roasted Veggie Bowl',skill:'comfortable',budget:'moderate',weekendPrep:true,habanero:true,heat:2,kate:[],tagline:'Roasted to perfection, drizzled in habanero tahini.',prepTime:'15 min',cookTime:'30 min',servings:1,ingredients:[{item:'Canned chickpeas',amount:'1 can (15oz)',shelf:'2–3 years sealed'},{item:'Bell peppers (mixed)',amount:'2 medium',shelf:'1–2 weeks refrigerated'},{item:'Zucchini',amount:'1 medium',shelf:'5–7 days refrigerated'},{item:'Red onion',amount:'½ medium',shelf:'2–3 weeks'},{item:'Habanero pepper',amount:'1',shelf:'1–2 weeks refrigerated'},{item:'Tahini',amount:'2 tbsp',shelf:'6 months after opening'},{item:'Garlic',amount:'3 cloves',shelf:'3–5 months whole'},{item:'Olive oil',amount:'2 tbsp',shelf:'18–24 months'},{item:'Lemon',amount:'1',shelf:'3–4 weeks refrigerated'},{item:'Mixed greens',amount:'2 cups',shelf:'5–7 days'}],instructions:['Preheat oven to 425°F. Line two baking sheets with parchment.','Drain and pat chickpeas VERY dry — moisture destroys crunch. Toss with olive oil, salt, garlic powder, smoked paprika.','Spread chickpeas in a single layer. Roast 25–30 min, shaking halfway, until deep golden and crispy.','Chop veggies into similar-sized pieces. Toss with remaining olive oil and salt. Roast 20 min on the second sheet.','Make habanero tahini: whisk tahini + lemon juice + minced raw habanero + garlic + 2–3 tbsp warm water.','Build: greens base → roasted veggies → chickpeas piled high → generous habanero tahini drizzle.'],nutrition:{calories:480,protein:22,carbs:55,fat:18,fiber:12},benefits:['Crispy chickpeas deliver 22g of plant protein — critical for muscle repair after workouts.','Tahini provides calcium and healthy unsaturated fats supporting bone density and hormonal balance.','Roasting vegetables concentrates nutrients and increases digestibility.','The protein-fat-fiber trifecta produces a 3–4 hour fullness window.']},
+{id:'m3',category:'morning',name:'Spicy Avocado Rice Cake Stack',skill:'beginner',budget:'cheap',weekendPrep:false,habanero:true,heat:2,kate:[],tagline:'The crunchiest no-cook morning in the kit.',prepTime:'8 min',cookTime:'0 min',servings:1,ingredients:[{item:'Brown rice cakes (GF)',amount:'3 cakes',shelf:'6–12 months sealed'},{item:'Ripe avocado',amount:'1 medium',shelf:'2–3 days once ripe'},{item:'Habanero pepper',amount:'½, minced',shelf:'1–2 weeks refrigerated'},{item:'Pickled red onions',amount:'2 tbsp',shelf:'2–4 weeks refrigerated'},{item:'Everything bagel seasoning (GF)',amount:'1 tsp',shelf:'1 year'},{item:'Cherry tomatoes',amount:'½ cup, halved',shelf:'5–7 days'},{item:'Lime',amount:'½',shelf:'2–4 weeks refrigerated'}],instructions:['Halve and pit the avocado. Scoop flesh into a small bowl.','Add minced habanero, lime juice, and a pinch of salt. Mash roughly — keep some texture.','Lay out 3 rice cakes. Protect that crunch.','Spread avocado mixture evenly over each cake.','Top with cherry tomatoes, pickled red onions, and a heavy shake of everything bagel seasoning.','Add red pepper flakes and eat immediately — rice cakes soften once topped.'],nutrition:{calories:310,protein:7,carbs:38,fat:16,fiber:9},benefits:['Avocado\'s monounsaturated fats promote satiety and reduce LDL cholesterol.','Rice cakes are GF and very low in calories — ideal as a light morning base on rest days.','Pickled red onions act as prebiotics, feeding beneficial gut bacteria.','Fat + fiber combination delivers steady energy without blood sugar spikes.']},
+{id:'m4',category:'morning',name:'Southwest Quinoa Power Bowl',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:false,heat:1,kate:[],tagline:'Complete protein, vibrant color, and crunchy pepitas.',prepTime:'10 min',cookTime:'15 min',servings:2,ingredients:[{item:'Quinoa (dry)',amount:'¾ cup',shelf:'2–3 years dry'},{item:'Black beans (canned)',amount:'1 can (15oz)',shelf:'2–3 years'},{item:'Frozen corn',amount:'1 cup',shelf:'12 months frozen'},{item:'Red bell pepper',amount:'1, diced',shelf:'1–2 weeks refrigerated'},{item:'Avocado',amount:'1',shelf:'2–3 days once ripe'},{item:'Fresh cilantro',amount:'¼ cup',shelf:'5–7 days'},{item:'Lime',amount:'1',shelf:'2–4 weeks refrigerated'},{item:'Pepitas (pumpkin seeds)',amount:'3 tbsp',shelf:'3 months pantry'},{item:'Cumin',amount:'1 tsp',shelf:'3–4 years'},{item:'Olive oil',amount:'1 tbsp',shelf:'18–24 months'}],instructions:['Cook quinoa: rinse well, combine with 1.5 cups water. Bring to boil, reduce heat, simmer 12–15 min. Fluff and cool slightly.','Char the corn in a dry pan over high heat — no oil, no stirring for 2 min. Let it blacken a little.','Make lime-cumin dressing: whisk olive oil, lime juice, cumin, salt, pinch of chili powder.','Drain and rinse black beans. Season with cumin and salt.','Assemble: quinoa base → black beans → charred corn → diced bell pepper → sliced avocado.','Scatter pepitas over top for crunch. Drizzle with dressing and top with fresh cilantro.'],nutrition:{calories:410,protein:17,carbs:60,fat:12,fiber:12},benefits:['Quinoa is one of the only plant foods containing all 9 essential amino acids — a complete protein.','Pepitas are among the richest plant sources of zinc, essential for immune function and muscle recovery.','Black beans + quinoa create an ideal complex carb + protein ratio for sustained energy.','12g fiber supports gut health and long-lasting fullness between meals.']},
+{id:'m5',category:'morning',name:'Kung Pao Chickpea Morning Bowl',skill:'comfortable',budget:'moderate',weekendPrep:true,habanero:true,heat:3,kate:[],tagline:'Sweet, salty, fiery, crunchy. Takeout energy, kitchen made.',prepTime:'15 min',cookTime:'20 min',servings:2,ingredients:[{item:'Canned chickpeas',amount:'2 cans (15oz)',shelf:'2–3 years'},{item:'Habanero pepper',amount:'1–2',shelf:'1–2 weeks refrigerated'},{item:'Bell pepper (red & green)',amount:'2 peppers',shelf:'1–2 weeks refrigerated'},{item:'Dry roasted peanuts',amount:'¼ cup',shelf:'3–4 months pantry'},{item:'Tamari (GF)',amount:'3 tbsp',shelf:'3 months open'},{item:'Rice vinegar',amount:'1 tbsp',shelf:'2 years'},{item:'Sesame oil',amount:'1 tbsp',shelf:'12–18 months'},{item:'Fresh ginger',amount:'1 tbsp, grated',shelf:'3 weeks refrigerated'},{item:'Garlic',amount:'3 cloves',shelf:'3–5 months'},{item:'Green onions',amount:'3 stalks',shelf:'5–7 days'},{item:'Frozen riced cauliflower',amount:'3 cups',shelf:'12 months frozen'}],instructions:['Make the sauce: whisk tamari, rice vinegar, pinch of maple syrup, splash of water.','Drain and pat chickpeas dry. Pan-fry in sesame oil over high heat until slightly crispy, about 8 min.','Add minced habanero, ginger, garlic, and diced bell peppers. Stir-fry on high 3–4 min.','Pour sauce over pan. Toss everything and cook 2 more min until sauce thickens and coats.','Cook riced cauliflower in a dry hot pan 5–6 min — no oil, no water — until edges crisp.','Serve stir-fry over cauliflower rice. Top with roasted peanuts and sliced green onions.'],nutrition:{calories:460,protein:20,carbs:52,fat:16,fiber:11},benefits:['Peanuts add healthy monounsaturated fats and an extra 8g protein per serving.','Cauliflower rice cuts carbohydrate load by 80% versus white rice while adding fiber.','Habanero + ginger creates a double thermogenic effect, boosting calorie burn.','Crunch from peanuts + chickpeas makes this feel indulgent without derailing progress.']},
+{id:'m6',category:'morning',name:'Stuffed Sweet Potato with Pepita Crunch',skill:'beginner',budget:'cheap',weekendPrep:false,habanero:false,heat:1,kate:[],tagline:'Vibrant, satisfying, and outrageously easy.',prepTime:'5 min',cookTime:'45 min',servings:1,ingredients:[{item:'Sweet potato (large)',amount:'1',shelf:'3–5 weeks pantry'},{item:'Black beans (canned)',amount:'½ can (7oz)',shelf:'2–3 years'},{item:'Avocado',amount:'½',shelf:'2–3 days once ripe'},{item:'Pickled red onions',amount:'2 tbsp',shelf:'2–4 weeks refrigerated'},{item:'Pepitas (pumpkin seeds)',amount:'2 tbsp',shelf:'3 months pantry'},{item:'Lime',amount:'½',shelf:'2–4 weeks refrigerated'},{item:'Cumin',amount:'½ tsp',shelf:'3–4 years'},{item:'Smoked paprika',amount:'½ tsp',shelf:'2–3 years'},{item:'Hot sauce (GF)',amount:'to taste',shelf:'3–5 years'}],instructions:['Preheat oven to 400°F. Scrub sweet potato, pierce with a fork several times.','Rub with a tiny bit of olive oil and a pinch of salt. Roast directly on oven rack 40–45 min until very tender.','Season black beans with cumin, paprika, salt, and a squeeze of lime. Warm in a small pan.','Let potato cool 5 min. Slice open and press down the insides with a fork.','Pile in black beans, then diced avocado, then pickled red onions.','Scatter pepitas over the top for crunch. Finish with hot sauce and lime. Eat from the skin.'],nutrition:{calories:380,protein:12,carbs:58,fat:12,fiber:11},benefits:['Sweet potatoes are rich in beta-carotene and vitamin A — powerful antioxidants for skin and immune health.','Pepitas are the richest plant source of zinc, critical for muscle recovery and immune defense.','Black beans add 7g protein and 7g fiber in half a can — an incredible nutrient-to-calorie ratio.','This slow-digesting complex carb provides 4+ hours of steady energy without a crash.']},
+{id:'e1',category:'evening',name:'Habanero Cauliflower Steaks with Olive Gremolata',skill:'comfortable',budget:'moderate',weekendPrep:false,habanero:true,heat:3,kate:['🫒 Olive & caper heavy'],tagline:'A centerpiece dish that looks as stunning as it tastes.',prepTime:'15 min',cookTime:'35 min',servings:2,ingredients:[{item:'Cauliflower (large head)',amount:'1 head',shelf:'5–7 days refrigerated'},{item:'Habanero pepper',amount:'1–2',shelf:'1–2 weeks refrigerated'},{item:'Olive oil',amount:'3 tbsp',shelf:'18–24 months'},{item:'Garlic',amount:'4 cloves',shelf:'3–5 months'},{item:'Kalamata olives (pitted)',amount:'½ cup',shelf:'12 months unopened / 3 weeks open'},{item:'Capers',amount:'2 tbsp',shelf:'1 year in brine'},{item:'Fresh parsley',amount:'¼ cup',shelf:'5–7 days'},{item:'Lemon',amount:'1',shelf:'3–4 weeks refrigerated'},{item:'Pine nuts',amount:'2 tbsp',shelf:'1–2 months pantry'},{item:'Smoked paprika',amount:'1 tsp',shelf:'2–3 years'}],instructions:['Preheat oven to 450°F. Slice cauliflower into 1-inch thick "steaks" from the center — 2–3 good ones.','Mince habanero and garlic together. Mix with olive oil, smoked paprika, and salt to form a paste.','Brush both sides of each steak generously with habanero paste.','Roast 20 min, flip carefully, roast another 12–15 min until deep golden with caramelized edges.','Toast pine nuts in a dry pan 2–3 min. Watch carefully — they burn fast.','Make gremolata: chop olives and capers, mix with parsley, lemon zest, a squeeze of juice, toasted pine nuts.','Plate steaks and spoon gremolata generously over top.'],nutrition:{calories:340,protein:12,carbs:32,fat:20,fiber:10},benefits:['Cauliflower contains sulforaphane, a powerful cancer-preventive anti-inflammatory compound.','Kalamata olives deliver oleocanthal with ibuprofen-like anti-inflammatory effects.','Capers are among the richest plant sources of quercetin, a powerful antioxidant.','Under 350 calories for a restaurant-quality plate — critical for diet adherence without feeling deprived.']},
+{id:'e2',category:'evening',name:'Spicy Lentil & Veggie Cauliflower Rice Bowl',skill:'comfortable',budget:'cheap',weekendPrep:true,habanero:true,heat:2,kate:[],tagline:'Protein-packed, low-carb, and deeply satisfying.',prepTime:'10 min',cookTime:'25 min',servings:2,ingredients:[{item:'Red lentils (dry)',amount:'1 cup',shelf:'2–3 years dry'},{item:'Cauliflower (riced)',amount:'3 cups',shelf:'5–7 days fresh / 12 months frozen'},{item:'Broccoli florets',amount:'2 cups',shelf:'3–5 days refrigerated'},{item:'Snap peas',amount:'1 cup',shelf:'3–5 days'},{item:'Habanero pepper',amount:'1',shelf:'1–2 weeks refrigerated'},{item:'Tamari (GF)',amount:'3 tbsp',shelf:'3 months open'},{item:'Fresh ginger',amount:'1 tbsp',shelf:'3 weeks refrigerated'},{item:'Garlic',amount:'4 cloves',shelf:'3–5 months'},{item:'Sesame oil',amount:'1 tbsp',shelf:'12–18 months'},{item:'Green onions',amount:'3 stalks',shelf:'5–7 days'},{item:'Sesame seeds',amount:'1 tbsp',shelf:'6 months–1 year'}],instructions:['Rinse lentils. Cook in 2 cups veggie broth 15–18 min until tender. Drain excess liquid.','Cook riced cauliflower in a completely dry pan over high heat 5–7 min — no water, or it gets soggy.','Heat sesame oil in a large wok over high heat. Add minced habanero, ginger, garlic — stir-fry 1 min.','Add broccoli and snap peas. Stir-fry high heat 4–5 min until bright green with slight char.','Add cooked lentils. Pour tamari over everything and toss. Cook 2 more min.','Serve over cauliflower rice. Top with green onions, sesame seeds, drizzle of sesame oil.'],nutrition:{calories:390,protein:24,carbs:58,fat:8,fiber:18},benefits:['Red lentils deliver 18g protein per cooked cup plus abundant iron essential for women\'s health.','Cauliflower rice cuts carbohydrate load by 80% vs white rice, directly supporting weight loss.','Ginger and habanero are both thermogenic — they raise body temp and accelerate fat oxidation.','18g of fiber feeds beneficial gut bacteria directly linked to easier weight management.']},
+{id:'e3',category:'evening',name:'Black Bean Habanero Enchiladas',skill:'comfortable',budget:'moderate',weekendPrep:true,habanero:true,heat:3,kate:['🫙 Pickled jalapeño topping'],tagline:'Smoky, saucy, spicy — and naturally gluten-free.',prepTime:'20 min',cookTime:'30 min',servings:3,ingredients:[{item:'Corn tortillas (GF)',amount:'9 small',shelf:'7–10 days refrigerated'},{item:'Black beans (canned)',amount:'2 cans (15oz)',shelf:'2–3 years'},{item:'Frozen corn',amount:'1 cup',shelf:'12 months frozen'},{item:'Habanero peppers',amount:'2–3',shelf:'1–2 weeks refrigerated'},{item:'Crushed tomatoes (canned)',amount:'28oz can',shelf:'2–3 years'},{item:'Cumin',amount:'2 tsp',shelf:'3–4 years'},{item:'Garlic',amount:'4 cloves',shelf:'3–5 months'},{item:'Red onion',amount:'1 medium',shelf:'2–3 weeks'},{item:'Pickled jalapeños',amount:'¼ cup, for topping',shelf:'12 months unopened / 3 months open'},{item:'Avocado',amount:'1, diced, for serving',shelf:'2–3 days once ripe'},{item:'Fresh cilantro',amount:'handful',shelf:'5–7 days'}],instructions:['Make habanero enchilada sauce: sauté diced onion and garlic 3 min. Add minced habaneros, crushed tomatoes, cumin, salt. Simmer 15 min. Blend for smooth sauce.','Preheat oven to 375°F. Drain and rinse black beans. Mix with corn and 2–3 spoons of the sauce.','Warm corn tortillas one at a time in a dry pan 20 seconds per side — prevents cracking.','Spread a thin layer of sauce on the bottom of a 9x13 baking dish.','Fill each tortilla with bean mixture. Roll tightly, place seam-side down in dish.','Pour remaining sauce over all enchiladas, coating evenly.','Bake 25 min until bubbling and edges begin to crisp. Top with pickled jalapeños, avocado, and cilantro.'],nutrition:{calories:520,protein:20,carbs:78,fat:12,fiber:16},benefits:['Black beans are a nutritional powerhouse: protein, fiber, folate, magnesium, and potassium.','Corn tortillas are naturally GF and significantly lower in calories than flour versions.','Best on workout days — this is a high-calorie, high-carb meal that fuels and rebuilds muscle.','Bean + corn combination creates a complete amino acid profile covering all essential proteins.']},
+{id:'e4',category:'evening',name:'Crispy Tofu Habanero Buddha Bowl',skill:'experienced',budget:'moderate',weekendPrep:true,habanero:true,heat:2,kate:['🫙 Pickled cucumbers = pickles'],tagline:'The muscle-builder. High protein, complex carbs, pure crunch.',prepTime:'20 min + 30 min press',cookTime:'40 min',servings:2,ingredients:[{item:'Extra-firm tofu',amount:'14oz block',shelf:'5–7 days open / 3 months frozen'},{item:'Brown rice',amount:'1 cup dry',shelf:'6 months pantry'},{item:'Shredded cabbage or greens',amount:'2 cups',shelf:'5–7 days'},{item:'Frozen shelled edamame',amount:'1 cup',shelf:'12 months frozen'},{item:'Persian cucumbers',amount:'2, sliced thin',shelf:'5–7 days'},{item:'Rice vinegar',amount:'3 tbsp',shelf:'2 years'},{item:'Habanero pepper',amount:'1',shelf:'1–2 weeks refrigerated'},{item:'Fresh ginger',amount:'1 tbsp',shelf:'3 weeks refrigerated'},{item:'Tamari (GF)',amount:'3 tbsp',shelf:'3 months open'},{item:'Sesame oil',amount:'2 tbsp',shelf:'12–18 months'},{item:'Garlic',amount:'2 cloves',shelf:'3–5 months'},{item:'Cornstarch',amount:'2 tbsp',shelf:'2 years'},{item:'Sesame seeds',amount:'1 tbsp',shelf:'6–12 months'}],instructions:['PRESS THE TOFU FIRST: Wrap in kitchen towels, place a heavy pan on top. Press 30 min minimum. No exceptions.','Start brown rice (40 min). Time everything around it.','Quick-pickle cucumbers: combine thin slices with rice vinegar, pinch of salt and sugar. Let sit 20+ min.','Cut pressed tofu into 1-inch cubes. Toss in cornstarch until every surface is coated.','Pan-fry tofu in sesame oil over medium-high. Do NOT move for 3–4 min. Flip and repeat all sides. 12–15 min total.','Blend the dressing: habanero + ginger + tamari + sesame oil + garlic + splash of rice vinegar.','Build: rice → greens → edamame → pickled cucumbers → crispy tofu. Drizzle dressing, finish with sesame seeds.'],nutrition:{calories:550,protein:28,carbs:62,fat:20,fiber:10},benefits:['Tofu provides 20g of complete protein with all 9 essential amino acids — the gold standard for plant-based muscle building.','Brown rice replenishes muscle glycogen after training — essential for recovery and growth.','Edamame contributes 8–10g more protein plus leucine, the key amino acid for triggering muscle synthesis.','This is the #1 post-workout meal in the kit. Eat within 1–2 hours of training for maximum results.']},
+{id:'e5',category:'evening',name:'Spicy Zucchini Noodle Puttanesca',skill:'comfortable',budget:'moderate',weekendPrep:false,habanero:true,heat:2,kate:['🫒 Olive & caper heavy — Kate-coded'],tagline:'Low-carb, bold, briny, and done in 20 minutes.',prepTime:'10 min',cookTime:'15 min',servings:2,ingredients:[{item:'Zucchini (large)',amount:'3 large',shelf:'5–7 days refrigerated'},{item:'Kalamata olives (pitted)',amount:'½ cup',shelf:'12 months unopened / 3 weeks open'},{item:'Capers',amount:'3 tbsp',shelf:'1 year in brine'},{item:'Crushed tomatoes (canned)',amount:'14oz can',shelf:'2–3 years'},{item:'Habanero pepper',amount:'1',shelf:'1–2 weeks'},{item:'Garlic',amount:'5 cloves',shelf:'3–5 months'},{item:'Artichoke hearts (canned)',amount:'14oz can',shelf:'2–3 years'},{item:'Olive oil',amount:'2 tbsp',shelf:'18–24 months'},{item:'Fresh basil',amount:'handful',shelf:'3–5 days'},{item:'Red pepper flakes',amount:'½ tsp',shelf:'2–3 years'}],instructions:['Spiralize zucchini into noodles. Salt lightly and let sit 10 min to draw out moisture.','Heat olive oil over medium. Add sliced garlic and minced habanero — sauté 2 min. Do not burn the garlic.','Add crushed tomatoes, olives, capers, artichoke hearts, and red pepper flakes. Simmer 10–12 min until thickened.','Pat zucchini noodles completely dry with paper towels.','Option A: Toss dry zucchini directly into hot sauce. Option B: Sauté in a screaming-hot dry pan 60–90 seconds first.','Plate and top with torn fresh basil, extra olive oil drizzle, and more capers.'],nutrition:{calories:280,protein:9,carbs:28,fat:16,fiber:8},benefits:['Zucchini noodles have 85% fewer calories than pasta — a major advantage for weight loss.','Olives and capers are rich in polyphenols reducing oxidative stress and inflammation.','Artichoke hearts are prebiotic, feeding gut bacteria linked to easier weight management.','At 280 calories this is the ideal rest-day evening meal when you do not need heavy fuel.']},
+{id:'e6',category:'evening',name:'Gobi Manchurian Bowl',skill:'experienced',budget:'moderate',weekendPrep:false,habanero:true,heat:3,kate:[],tagline:'Indo-Chinese crispy cauliflower in a sticky chili sauce. Absolutely unhinged (in the best way).',prepTime:'20 min',cookTime:'25 min',servings:2,ingredients:[{item:'Cauliflower',amount:'1 medium head',shelf:'5–7 days refrigerated'},{item:'Chickpea flour (GF)',amount:'½ cup',shelf:'1 year sealed'},{item:'Habanero pepper',amount:'1',shelf:'1–2 weeks refrigerated'},{item:'Tamari (GF)',amount:'3 tbsp',shelf:'3 months open'},{item:'Tomato ketchup (GF)',amount:'2 tbsp',shelf:'12 months open'},{item:'Rice vinegar',amount:'1 tbsp',shelf:'2 years'},{item:'Fresh ginger',amount:'1 tbsp',shelf:'3 weeks refrigerated'},{item:'Garlic',amount:'5 cloves',shelf:'3–5 months'},{item:'Sesame oil',amount:'2 tbsp',shelf:'12–18 months'},{item:'Green onions',amount:'4 stalks',shelf:'5–7 days'},{item:'Brown rice',amount:'1 cup dry',shelf:'6 months pantry'}],instructions:['Start rice. Break cauliflower into small, even-sized florets.','Make batter: whisk chickpea flour + pinch of salt + enough water to form a thick pancake-batter consistency.','Dip each floret in batter. Pan-fry in sesame oil over medium-high in batches — do not crowd. Cook 3–4 min per side until golden and crispy.','Make Manchurian sauce: in the same pan, sauté minced habanero, ginger, and garlic 1 min. Add tamari, ketchup, rice vinegar, and 2 tbsp water. Simmer 3 min until glossy.','Toss crispy cauliflower in the sauce — work fast or the batter softens.','Serve immediately over brown rice. Top with a heavy pile of sliced green onions.'],nutrition:{calories:420,protein:15,carbs:65,fat:12,fiber:10},benefits:['Chickpea flour batter adds protein and makes this entirely GF with no compromise on crunch.','Cauliflower\'s sulforaphane is especially active when lightly cooked, retaining anti-inflammatory properties.','This dish satisfies fried food cravings with a fraction of the oil content of deep frying.','The Indo-Chinese spice combination supports digestion and circulation.']},
+{id:'e7',category:'evening',name:'Korean Smashed Cucumber & Tofu Bowl',skill:'comfortable',budget:'moderate',weekendPrep:true,habanero:true,heat:2,kate:['🫙 Smashed cucumbers = speed pickles'],tagline:'The technique is the trick. Smash it, sauce it, crunch it.',prepTime:'20 min + 15 min marinate',cookTime:'20 min',servings:2,ingredients:[{item:'Persian cucumbers',amount:'4 large',shelf:'5–7 days refrigerated'},{item:'Extra-firm tofu',amount:'14oz block',shelf:'5–7 days open'},{item:'Habanero pepper',amount:'1',shelf:'1–2 weeks refrigerated'},{item:'Tamari (GF)',amount:'3 tbsp',shelf:'3 months open'},{item:'Rice vinegar',amount:'2 tbsp',shelf:'2 years'},{item:'Sesame oil',amount:'2 tbsp',shelf:'12–18 months'},{item:'Garlic',amount:'3 cloves',shelf:'3–5 months'},{item:'Sesame seeds',amount:'1 tbsp',shelf:'6–12 months'},{item:'Green onions',amount:'2 stalks',shelf:'5–7 days'},{item:'Jasmine rice (GF)',amount:'1 cup dry',shelf:'4–5 years'},{item:'Cornstarch',amount:'1 tbsp',shelf:'2 years'}],instructions:['SMASH THE CUCUMBERS: Place each on a cutting board, lay the flat side of a knife on top, strike firmly with your palm. The cucumber cracks open. Tear into rough pieces and salt heavily. Let sit 15 min, then squeeze out all liquid.','Make cucumber dressing: whisk tamari, rice vinegar, sesame oil, minced habanero, minced garlic. Pour over cucumbers. Let marinate at least 15 min.','Press tofu briefly. Cut into slabs, dust with cornstarch, pan-fry in sesame oil until golden on both sides (3–4 min per side).','Cook rice. Keep warm.','Build: rice → pan-fried tofu slabs → marinated smashed cucumbers piled high → sesame seeds → green onions.'],nutrition:{calories:440,protein:24,carbs:50,fat:16,fiber:7},benefits:['Smashing cucumbers opens up the cell structure, allowing them to absorb flavor more deeply — essentially quick pickling.','Tofu\'s complete protein combined with the fermented-flavor dressing supports both muscle and gut health.','The high water content of cucumbers keeps you hydrated and adds volume without significant calories.','Sesame oil contains sesamol and sesamin, antioxidants that support liver function and reduce inflammation.']},
+{id:'e8',category:'evening',name:'Vegan Taco Salad',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:false,heat:1,kate:['🫙 Pickled jalapeños on top'],tagline:'Crunch in every single bite. Assembled, not cooked.',prepTime:'12 min',cookTime:'5 min',servings:2,ingredients:[{item:'Romaine lettuce',amount:'4 cups, chopped',shelf:'5–7 days'},{item:'Black beans (canned)',amount:'1 can (15oz)',shelf:'2–3 years'},{item:'Frozen corn',amount:'1 cup',shelf:'12 months frozen'},{item:'Avocado',amount:'1',shelf:'2–3 days once ripe'},{item:'Cherry tomatoes',amount:'1 cup, halved',shelf:'5–7 days'},{item:'Pickled jalapeños',amount:'¼ cup',shelf:'3 months open'},{item:'GF corn tortilla chips',amount:'2 oz, crushed',shelf:'2–3 months sealed'},{item:'Lime',amount:'1',shelf:'2–4 weeks refrigerated'},{item:'Cumin',amount:'1 tsp',shelf:'3–4 years'},{item:'Olive oil',amount:'1 tbsp',shelf:'18–24 months'}],instructions:['Char the corn: heat a dry pan to screaming hot. Add frozen corn, no oil. Let it blacken 2–3 min without stirring, then toss once. Remove when golden.','Season black beans with cumin, salt, lime juice, and a dash of olive oil. Warm briefly or leave at room temp.','Make lime dressing: olive oil + lime juice + cumin + salt, whisked together.','In a large bowl, add chopped romaine as the base.','Layer on black beans, charred corn, diced avocado, halved tomatoes, and pickled jalapeños.','Drizzle lime dressing. Crush corn chips generously over the top just before eating.'],nutrition:{calories:390,protein:14,carbs:52,fat:14,fiber:14},benefits:['Romaine lettuce is exceptionally high in vitamin K, folate, and beta-carotene for a leafy green.','Charring corn concentrates natural sugars and creates antioxidant compounds.','Crushing chips on top — not tossed in — ensures maximum crunch without going soggy.','At 14g fiber from beans + romaine this is one of the most filling low-calorie meals in the kit.']},
+{id:'e9',category:'evening',name:'Chickpea Shawarma Bowl',skill:'comfortable',budget:'moderate',weekendPrep:true,habanero:false,heat:1,kate:['🫙 Pickled red onion topping'],tagline:'Middle Eastern spice, roasted perfection, tahini everything.',prepTime:'15 min',cookTime:'30 min',servings:2,ingredients:[{item:'Canned chickpeas',amount:'2 cans (15oz)',shelf:'2–3 years'},{item:'Brown rice',amount:'1 cup dry',shelf:'6 months pantry'},{item:'Persian cucumber',amount:'1, diced',shelf:'5–7 days'},{item:'Cherry tomatoes',amount:'1 cup, halved',shelf:'5–7 days'},{item:'Pickled red onions',amount:'¼ cup',shelf:'2–4 weeks refrigerated'},{item:'Tahini',amount:'3 tbsp',shelf:'6 months open'},{item:'Cumin',amount:'2 tsp',shelf:'3–4 years'},{item:'Coriander',amount:'1 tsp',shelf:'3–4 years'},{item:'Smoked paprika',amount:'1 tsp',shelf:'2–3 years'},{item:'Turmeric',amount:'½ tsp',shelf:'3–4 years'},{item:'Garlic',amount:'3 cloves',shelf:'3–5 months'},{item:'Lemon',amount:'1',shelf:'3–4 weeks refrigerated'},{item:'Olive oil',amount:'2 tbsp',shelf:'18–24 months'},{item:'Fresh parsley',amount:'¼ cup',shelf:'5–7 days'}],instructions:['Cook brown rice (40 min). Preheat oven to 425°F.','Drain and pat chickpeas dry. Toss with olive oil, cumin, coriander, paprika, turmeric, garlic powder, and salt.','Roast chickpeas on a sheet pan 25–30 min, shaking once, until deeply golden and crispy.','Make tahini lemon dressing: whisk tahini + lemon juice + minced garlic + salt + 3–4 tbsp water until creamy.','Dice cucumber, halve cherry tomatoes, chop parsley.','Build: rice base → roasted shawarma chickpeas → cucumber → tomatoes → pickled red onions → fresh parsley. Drizzle tahini generously.'],nutrition:{calories:500,protein:20,carbs:72,fat:12,fiber:14},benefits:['Turmeric contains curcumin — one of the most studied anti-inflammatory compounds in nutrition science.','The shawarma spice blend supports digestion, circulation, and inflammation reduction collectively.','Chickpeas roasted with spices have a lower glycemic response than boiled, keeping blood sugar stable.','This bowl provides 20g plant protein — ideal as a recovery meal after strength training days.']},
+{id:'s1',category:'snack',name:'Habanero Roasted Chickpeas',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:true,heat:3,kate:[],tagline:'The chip replacement that actually has protein.',prepTime:'5 min + 15 min dry',cookTime:'35 min',servings:4,ingredients:[{item:'Canned chickpeas',amount:'2 cans (15oz)',shelf:'2–3 years sealed'},{item:'Olive oil',amount:'1 tbsp',shelf:'18–24 months'},{item:'Habanero powder',amount:'1 tsp (or 1 fresh minced)',shelf:'2–3 years dried'},{item:'Smoked paprika',amount:'1 tsp',shelf:'2–3 years'},{item:'Garlic powder',amount:'1 tsp',shelf:'3–4 years'},{item:'Sea salt',amount:'½ tsp',shelf:'Indefinite'},{item:'Lime (for zesting)',amount:'1',shelf:'2–4 weeks refrigerated'}],instructions:['Preheat oven to 400°F.','Drain and rinse chickpeas. Spread on paper towels, rub dry, then air-dry 15 min. Moisture kills crunch.','Remove any loose skins that fall off — they burn before the chickpeas crisp.','Toss with olive oil, habanero, paprika, garlic powder, and salt.','Spread in a SINGLE LAYER on a baking sheet. Crowding = steaming = soft.','Roast 30–35 min, shaking every 10 min, until deep golden and very crispy.','Zest lime directly over hot chickpeas. Toss and let cool completely — they crisp further as they cool.','Store in an open container at room temp. Keeps 3 days.'],nutrition:{calories:120,protein:6,carbs:15,fat:4,fiber:4},benefits:['6g of protein per serving — unlike any chip on the market. Actual muscle support in snack form.','Low glycemic index means no blood sugar spike, no crash, no urge to eat everything in sight.','Capsaicin may suppress appetite and increase calorie burn by 50–100 calories after eating.','The crunch and chew takes more time, giving the brain a chance to register fullness.']},
+{id:'s2',category:'snack',name:'The Pickle & Olive Board',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:false,heat:1,kate:['🫙 Pickles','🫒 Olives','🥒 Pickled Okra — Kate\'s Triple Threat'],tagline:'Zero cooking. Maximum Kate energy.',prepTime:'5 min',cookTime:'0 min',servings:1,ingredients:[{item:'Dill pickle spears',amount:'3–4 spears',shelf:'12 months unopened / 3 months open'},{item:'Pickled okra',amount:'4–5 pods',shelf:'12 months unopened / 3 months open'},{item:'Mixed olives (kalamata + green)',amount:'½ cup',shelf:'12 months unopened / 3 weeks open'},{item:'GF rice crackers',amount:'1 oz',shelf:'6–12 months sealed'},{item:'Hummus (add sliced habanero on top if desired)',amount:'¼ cup',shelf:'5–7 days open'},{item:'Cherry tomatoes',amount:'½ cup',shelf:'5–7 days'}],instructions:['Pull everything from the fridge. This is assembly, not cooking.','Arrange pickles, pickled okra, and olives in sections on a small board or plate.','Place a small bowl of hummus in the center. Slice a fresh habanero over the hummus if desired.','Add rice crackers and cherry tomatoes around the edges.','Pair with sparkling water or unsweetened green tea.'],nutrition:{calories:180,protein:5,carbs:22,fat:9,fiber:4},benefits:['Pickles, pickled okra, and olives flood your gut with beneficial probiotic bacteria.','A healthy gut microbiome is one of the strongest scientific predictors of healthy body weight.','Olives deliver oleocanthal — a polyphenol with the same anti-inflammatory mechanism as ibuprofen.','Under 200 calories with genuine satisfaction from crunch, salt, and sour — the holy trinity.']},
+{id:'s3',category:'snack',name:'Habanero Guacamole with Plantain Chips',skill:'beginner',budget:'moderate',weekendPrep:false,habanero:true,heat:3,kate:[],tagline:'Creamy meets crunchy. The classic, set on fire.',prepTime:'10 min',cookTime:'0 min',servings:2,ingredients:[{item:'Ripe avocados',amount:'2 large',shelf:'2–3 days once ripe'},{item:'Habanero pepper',amount:'1–2',shelf:'1–2 weeks refrigerated'},{item:'Lime',amount:'1 large',shelf:'3–4 weeks refrigerated'},{item:'Red onion',amount:'¼ cup, finely diced',shelf:'2–3 weeks'},{item:'Fresh cilantro',amount:'¼ cup',shelf:'5–7 days'},{item:'Sea salt',amount:'to taste',shelf:'Indefinite'},{item:'Plantain chips (unsweetened, GF)',amount:'2 oz',shelf:'2–3 months sealed'}],instructions:['Wearing gloves, mince habanero extremely fine — heat distributed in every bite, not fire-chunks.','Halve and pit avocados. Scoop flesh into a bowl.','Mash with a fork to preferred texture — some lumps give character.','Fold in habanero, red onion, cilantro, and lime juice. Season with salt.','Habanero heat intensifies as it sits — make now, eat soon.','Serve with plantain chips. Press plastic wrap directly onto leftover guac to slow browning.'],nutrition:{calories:320,protein:4,carbs:28,fat:22,fiber:8},benefits:['Avocados contain potassium, folate, B6, and vitamin E — among the most nutrient-dense foods available.','Monounsaturated fats in avocado increase absorption of fat-soluble vitamins A, D, E, and K.','Plantain chips are GF, higher in potassium than regular chips, and provide quick-burning natural sugars.','Studies consistently associate avocado consumption with lower body weight despite the fat content.']},
+{id:'s4',category:'snack',name:'Spicy Roasted Edamame',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:true,heat:2,kate:[],tagline:'The highest protein snack in the entire kit. Period.',prepTime:'5 min',cookTime:'25 min',servings:4,ingredients:[{item:'Frozen shelled edamame',amount:'2 cups',shelf:'12 months frozen'},{item:'Olive oil',amount:'1 tbsp',shelf:'18–24 months'},{item:'Habanero powder',amount:'½ tsp',shelf:'2–3 years'},{item:'Lime (for zesting)',amount:'1',shelf:'3–4 weeks refrigerated'},{item:'Sea salt',amount:'½ tsp',shelf:'Indefinite'},{item:'Garlic powder',amount:'½ tsp',shelf:'3–4 years'}],instructions:['Preheat oven to 400°F.','Thaw edamame and pat completely dry. Moisture will steam them instead of roasting.','Toss with olive oil, habanero powder, garlic powder, and salt.','Spread in a single layer on a baking sheet.','Roast 20–25 min, shaking once at 12 min, until edges are slightly crispy and golden.','Remove and zest lime directly over hot edamame. Toss. Serve warm or cool and store for the week.'],nutrition:{calories:190,protein:17,carbs:15,fat:8,fiber:8},benefits:['17g of protein per serving — edamame contains all 9 essential amino acids. A complete plant protein.','Best plant source of leucine, the amino acid most responsible for triggering muscle protein synthesis.','High in isoflavones supporting bone density, heart health, and hormonal balance.','8g fiber + 17g protein creates one of the longest fullness windows of any snack in this guide.']},
+{id:'s5',category:'snack',name:'Mango Habanero Salsa & Corn Chips',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:true,heat:3,kate:[],tagline:'Sweet fire. The snack that sneaks up on you.',prepTime:'10 min',cookTime:'0 min',servings:3,ingredients:[{item:'Fresh mango',amount:'1 large',shelf:'3–5 days once ripe'},{item:'Habanero pepper',amount:'1–2',shelf:'1–2 weeks refrigerated'},{item:'Red onion',amount:'¼ cup, finely diced',shelf:'2–3 weeks'},{item:'Fresh cilantro',amount:'¼ cup',shelf:'5–7 days'},{item:'Lime',amount:'1',shelf:'3–4 weeks refrigerated'},{item:'Sea salt',amount:'pinch',shelf:'Indefinite'},{item:'GF corn tortilla chips',amount:'2 oz',shelf:'2–3 months sealed'}],instructions:['Dice mango into small, even cubes — about ¼ inch gives the best salsa scoopability.','Mince habanero extremely fine. Remove seeds for medium, keep for full fire.','Combine mango, habanero, red onion, and cilantro. Squeeze lime and add a pinch of salt. Toss gently.','Let sit 10–15 min — the heat blooms and flavors meld.','Serve with corn chips. Salsa keeps 2–3 days refrigerated. It gets spicier each day.'],nutrition:{calories:220,protein:3,carbs:42,fat:5,fiber:4},benefits:['Mango is rich in digestive enzymes (amylase and lipase) that break down complex carbs and fats.','A single mango provides over 100% of daily vitamin C for immune function and collagen production.','Habanero capsaicin acts as a natural thermogenic, raising metabolic rate and promoting fat mobilization.','Natural fruit sugars provide fast-burning energy — an excellent pre-workout snack.']},
+{id:'s6',category:'snack',name:'Spiced Pepitas',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:false,heat:1,kate:[],tagline:'One ingredient, a handful of spices, and a snack that punches above its weight.',prepTime:'3 min',cookTime:'12 min',servings:6,ingredients:[{item:'Raw pumpkin seeds (pepitas)',amount:'1½ cups',shelf:'3 months pantry / 12 months frozen'},{item:'Olive oil',amount:'1 tsp',shelf:'18–24 months'},{item:'Cumin',amount:'1 tsp',shelf:'3–4 years'},{item:'Smoked paprika',amount:'½ tsp',shelf:'2–3 years'},{item:'Garlic powder',amount:'½ tsp',shelf:'3–4 years'},{item:'Sea salt',amount:'½ tsp',shelf:'Indefinite'},{item:'Lime (for zesting)',amount:'1',shelf:'2–4 weeks refrigerated'}],instructions:['Preheat oven to 325°F — lower temp keeps the natural oils from burning.','Toss pepitas with olive oil, cumin, paprika, garlic powder, and salt.','Spread on a baking sheet in a single layer.','Roast 10–12 min, shaking once, until seeds are puffed and lightly golden. They pop a little — that\'s good.','Remove from oven immediately. Zest lime over top and toss.','Cool completely — they crisp as they cool. Store in an airtight jar up to 2 weeks.'],nutrition:{calories:170,protein:9,carbs:5,fat:14,fiber:2},benefits:['Pepitas are the richest plant source of zinc — critical for immune defense and muscle recovery.','Magnesium content supports over 300 enzymatic reactions including muscle relaxation and sleep quality.','Fat + protein combination makes these extremely satiating for their calorie count.','Perfect as a crunchy topping on salads and bowls — doubles as a meal booster throughout the week.']},
+{id:'s7',category:'snack',name:'Hearts of Palm Ceviche Cups',skill:'beginner',budget:'moderate',weekendPrep:false,habanero:true,heat:2,kate:[],tagline:'Looks fancy. Takes 10 minutes. Tastes like the ocean punched you (nicely).',prepTime:'10 min',cookTime:'0 min',servings:3,ingredients:[{item:'Hearts of palm (canned)',amount:'14oz can',shelf:'2–3 years sealed / 5 days open'},{item:'Mango',amount:'½ cup, diced',shelf:'3–5 days'},{item:'Habanero pepper',amount:'½–1',shelf:'1–2 weeks refrigerated'},{item:'Red onion',amount:'¼ cup, finely diced',shelf:'2–3 weeks'},{item:'Fresh cilantro',amount:'¼ cup',shelf:'5–7 days'},{item:'Lime',amount:'2',shelf:'2–4 weeks refrigerated'},{item:'Cucumber',amount:'½, diced',shelf:'5–7 days'},{item:'GF corn chip scoops',amount:'1 oz',shelf:'2–3 months sealed'}],instructions:['Drain and rinse hearts of palm. Slice into thin rounds or half-moons, about ¼ inch thick.','Mince habanero. Combine with lime juice, a pinch of salt, and the red onion in a bowl first — this "cooks" the onion slightly.','Add hearts of palm, diced mango, cucumber, and cilantro. Toss gently.','Let marinate 5–10 min minimum. The lime juice mimics ceviche\'s acid "cooking" process.','Serve in a bowl with corn chip scoops alongside, or spoon directly into each chip.'],nutrition:{calories:190,protein:3,carbs:30,fat:6,fiber:5},benefits:['Hearts of palm are extremely low calorie (25 cal/100g) with a satisfying meaty texture that tricks the mind.','Lime juice is high in vitamin C and supports absorption of iron from plant-based meals.','Mango provides digestive enzymes that aid nutrient breakdown when eaten alongside other foods.','This snack is deeply hydrating — cucumbers and lime together fight bloating and support kidney function.']},
+{id:'s8',category:'snack',name:'Crispy Lentil Crackers with Avocado Dip',skill:'comfortable',budget:'cheap',weekendPrep:true,habanero:false,heat:1,kate:[],smoothie:false,rice:false,tagline:'Homemade crackers with 10g protein. Yes, crackers.',prepTime:'10 min',cookTime:'25 min',servings:4,ingredients:[{item:'Red lentils (dry)',amount:'1 cup',shelf:'2–3 years dry'},{item:'Water',amount:'1¼ cups',shelf:'N/A'},{item:'Cumin',amount:'1 tsp',shelf:'3–4 years'},{item:'Garlic powder',amount:'½ tsp',shelf:'3–4 years'},{item:'Sea salt',amount:'½ tsp',shelf:'Indefinite'},{item:'Ripe avocados',amount:'2',shelf:'2–3 days once ripe'},{item:'Lime',amount:'1',shelf:'2–4 weeks refrigerated'},{item:'Red pepper flakes',amount:'pinch',shelf:'2–3 years'}],instructions:['Preheat oven to 375°F. Soak lentils in water 20 min (no cooking needed).','Drain lentils and blend with fresh water, cumin, garlic powder, and salt until completely smooth — like thin batter.','Pour batter onto a parchment-lined baking sheet, spread extremely thin (like a crepe).','Bake 20–25 min until edges are golden and the center is dry. It will crisp as it cools.','Break into rustic pieces once cooled.','Make avocado dip: mash avocado with lime juice, salt, and red pepper flakes. Serve alongside.'],nutrition:{calories:210,protein:10,carbs:24,fat:9,fiber:6},benefits:['Lentil crackers are grain-free, GF, and provide 10g of plant protein — something no store-bought cracker can claim.','Red lentils contain iron, B vitamins, and folate essential for energy metabolism and cellular repair.','Making crackers at home eliminates seed oils, preservatives, and refined starches in commercial versions.','Avocado dip provides healthy fats that increase satiety and fat-soluble vitamin absorption from the lentils.']},
+
+// ══ NEW MORNING: SMOOTHIES & WAFFLES ══
+{id:'m7',category:'morning',name:'Green Protein Smoothie',skill:'beginner',budget:'cheap',weekendPrep:false,habanero:false,heat:0,kate:[],smoothie:true,rice:false,tagline:'Creamy, cold, and secretly 22g of protein.',prepTime:'5 min',cookTime:'0 min',servings:1,
+ingredients:[{item:'Frozen spinach',amount:'1 cup',shelf:'12 months frozen'},{item:'Frozen mango chunks',amount:'1 cup',shelf:'12 months frozen'},{item:'Frozen banana (sliced before freezing)',amount:'½ banana',shelf:'3 months frozen'},{item:'Unsweetened almond or oat milk (GF)',amount:'1 cup',shelf:'7–10 days open'},{item:'Hemp seeds',amount:'3 tbsp',shelf:'1 year sealed'},{item:'Chia seeds',amount:'1 tbsp',shelf:'2 years'},{item:'Pea protein powder (unflavored or vanilla, GF)',amount:'1 scoop (~25g)',shelf:'1–2 years'},{item:'Fresh ginger (optional)',amount:'½ inch piece',shelf:'3 weeks refrigerated'}],
+instructions:['Add liquid to the blender first — this protects the blades and ensures a smooth blend.','Add frozen spinach, mango, and banana.','Add hemp seeds, chia seeds, ginger, and protein powder.','Blend on high 45–60 seconds until completely smooth. If too thick, add a splash more milk.','Drink immediately — chia seeds begin to gel within 10 minutes and will change texture.','Tip: Pre-portion smoothie bags in the freezer (all solids except milk) so morning prep takes 90 seconds.'],
+nutrition:{calories:380,protein:22,carbs:42,fat:10,fiber:9},
+benefits:['Hemp seeds are a complete plant protein — all 9 essential amino acids plus a perfect 3:1 omega-6 to omega-3 ratio.','Spinach delivers iron, folate, and vitamin K without any detectable flavor when blended with fruit.','Frozen mango and banana add natural sweetness so zero added sugar is needed — no blood sugar spike.','Chia seeds provide 9g omega-3 fatty acids per oz, supporting inflammation reduction and brain health.']},
+
+{id:'m8',category:'morning',name:'Mango Habanero Smoothie',skill:'beginner',budget:'cheap',weekendPrep:false,habanero:true,heat:2,kate:[],smoothie:true,rice:false,tagline:'Sweet, spicy, cold. The most Kate smoothie on the planet.',prepTime:'5 min',cookTime:'0 min',servings:1,
+ingredients:[{item:'Frozen mango chunks',amount:'1½ cups',shelf:'12 months frozen'},{item:'Habanero pepper',amount:'¼–½ pepper (remove seeds for gentler heat)',shelf:'1–2 weeks refrigerated'},{item:'Fresh lime juice',amount:'1 lime',shelf:'2–4 weeks refrigerated'},{item:'Coconut water (unsweetened)',amount:'1 cup',shelf:'1 year sealed / 4 days open'},{item:'Frozen pineapple',amount:'½ cup',shelf:'12 months frozen'},{item:'Pea protein powder (vanilla, GF)',amount:'1 scoop',shelf:'1–2 years'},{item:'Turmeric',amount:'¼ tsp',shelf:'3–4 years'}],
+instructions:['Seed the habanero — even ¼ of a habanero adds serious heat in smoothie form. Start cautious.','Blend habanero and coconut water first for 15 seconds to distribute the heat evenly.','Add all frozen fruit, lime juice, protein powder, and turmeric.','Blend 45–60 seconds until smooth. Taste — add more habanero only if you are truly ready.','Pour immediately. The heat blooms over the next few minutes, so it gets spicier as you drink it.'],
+nutrition:{calories:310,protein:20,carbs:48,fat:2,fiber:5},
+benefits:['Capsaicin in habanero raises metabolic rate — yes, even in a cold smoothie. The compound survives blending.','Coconut water provides potassium, magnesium, and natural electrolytes for post-workout rehydration.','Mango + pineapple together contain bromelain and amylase — two enzymes that aid protein and carb digestion.','Turmeric\'s curcumin is fat-soluble; the small fat in the fruit boosts its absorption.']},
+
+{id:'m9',category:'morning',name:'Crispy GF Waffles with Berry Compote',skill:'comfortable',budget:'moderate',weekendPrep:true,habanero:false,heat:0,kate:[],smoothie:false,rice:false,tagline:'GF waffles that actually crunch. A rare and important achievement.',prepTime:'15 min',cookTime:'20 min',servings:4,
+ingredients:[{item:'GF all-purpose flour blend (or oat flour GF)',amount:'1½ cups',shelf:'6–12 months'},{item:'Canned chickpeas (liquid/aquafaba, NOT the beans)',amount:'3 tbsp aquafaba',shelf:'Use same day'},{item:'Unsweetened almond milk',amount:'1 cup',shelf:'7–10 days open'},{item:'Coconut oil (melted)',amount:'3 tbsp',shelf:'2 years'},{item:'Baking powder (GF)',amount:'2 tsp',shelf:'1 year'},{item:'Vanilla extract (GF)',amount:'1 tsp',shelf:'3–4 years'},{item:'Sea salt',amount:'¼ tsp',shelf:'Indefinite'},{item:'Frozen mixed berries',amount:'1½ cups',shelf:'12 months frozen'},{item:'Maple syrup',amount:'2 tbsp',shelf:'1 year opened'},{item:'Pepitas or sliced almonds (for topping crunch)',amount:'2 tbsp',shelf:'3 months pantry'}],
+instructions:['AQUAFABA TIP: The liquid from a can of chickpeas replaces eggs perfectly. Whisk it 30 seconds until slightly foamy — this gives the waffles lift.','Mix dry ingredients: GF flour, baking powder, salt.','Whisk wet ingredients separately: aquafaba, almond milk, melted coconut oil, vanilla.','Combine wet and dry — stir until just mixed. Do NOT overmix or the waffles get dense.','Preheat waffle iron and coat lightly with coconut oil spray. Pour batter in, cook until steam stops escaping (~4 min). Do not open early.','Make berry compote: combine frozen berries and maple syrup in a small pan. Simmer 5 min until slightly thickened.','Top waffles with berry compote and a scatter of pepitas or sliced almonds for crunch contrast.'],
+nutrition:{calories:340,protein:8,carbs:52,fat:12,fiber:5},
+benefits:['Aquafaba (chickpea liquid) mimics egg white structure — providing lift without any eggs or dairy.','GF flour blends are typically rice or tapioca based — easier to digest than wheat and lower in inflammatory compounds.','The coconut oil + aquafaba base creates a crisp exterior that maintains its crunch better than butter-based batters.','Berry compote provides anthocyanins — the purple pigments in berries that reduce oxidative stress and support brain health.']},
+
+// ══ NEW EVENING: RICE DISHES ══
+{id:'e10',category:'evening',name:'Jasmine Rice Bowl with Crispy Tofu & Pickled Veg',skill:'comfortable',budget:'cheap',weekendPrep:true,habanero:false,heat:1,kate:['🫙 Pickled cucumbers & carrots'],smoothie:false,rice:true,tagline:'Clean, satisfying, and deeply umami. The rice bowl you will make every week.',prepTime:'15 min',cookTime:'40 min',servings:2,
+ingredients:[{item:'Jasmine rice (GF)',amount:'1 cup dry',shelf:'4–5 years'},{item:'Extra-firm tofu',amount:'14oz block',shelf:'5–7 days open'},{item:'Persian cucumbers',amount:'2',shelf:'5–7 days'},{item:'Carrots',amount:'2 medium',shelf:'3–4 weeks refrigerated'},{item:'Rice vinegar',amount:'4 tbsp',shelf:'2 years'},{item:'Tamari (GF)',amount:'3 tbsp',shelf:'3 months open'},{item:'Sesame oil',amount:'2 tbsp',shelf:'12–18 months'},{item:'Garlic',amount:'3 cloves',shelf:'3–5 months'},{item:'Fresh ginger',amount:'1 tbsp',shelf:'3 weeks refrigerated'},{item:'Cornstarch',amount:'2 tbsp',shelf:'2 years'},{item:'Sesame seeds',amount:'1 tbsp',shelf:'6–12 months'},{item:'Green onions',amount:'2 stalks',shelf:'5–7 days'},{item:'Edamame (frozen, shelled)',amount:'½ cup',shelf:'12 months frozen'}],
+instructions:['Cook jasmine rice per package. For extra separation and slight chew, use slightly less water than directed (1:1.5 rice to water instead of 1:2).','PRESS TOFU: Wrap in towels, weight with heavy pan for 20 min minimum.','Quick-pickle the vegetables: thinly slice cucumbers and carrots (use a peeler for carrot ribbons). Toss with rice vinegar, pinch of salt, pinch of sugar. Let sit while tofu presses.','Cut pressed tofu into cubes. Toss heavily in cornstarch.','Pan-fry tofu in sesame oil over medium-high, undisturbed, 3–4 min per side until all surfaces are deeply golden.','Make the sauce: whisk tamari, minced garlic, grated ginger, a splash of sesame oil, and a splash of rice vinegar.','Toss crispy tofu in sauce. Plate over rice. Top with drained pickled veg, edamame, sesame seeds, and green onions.'],
+nutrition:{calories:490,protein:26,carbs:62,fat:14,fiber:8},
+benefits:['Jasmine rice is lower on the glycemic index than white rice when eaten warm, and lower still when cooled (resistant starch).','Tofu\'s complete amino acid profile supports muscle protein synthesis at every meal it appears in.','The pickling process converts vegetables into probiotic-rich foods that feed your gut microbiome.','Edamame adds an additional 9g of complete protein, pushing this bowl to serious muscle-maintenance territory.']},
+
+{id:'e11',category:'evening',name:'Spicy Thai Basil Fried Rice',skill:'comfortable',budget:'cheap',weekendPrep:true,habanero:true,heat:3,kate:[],smoothie:false,rice:true,tagline:'The classic Thai street food — habanero edition, fully plant-based.',prepTime:'10 min',cookTime:'15 min',servings:2,
+ingredients:[{item:'Cooked jasmine rice (day-old is best)',amount:'2 cups cooked',shelf:'3–4 days refrigerated'},{item:'Extra-firm tofu',amount:'7oz, crumbled',shelf:'5–7 days open'},{item:'Habanero pepper',amount:'1–2',shelf:'1–2 weeks refrigerated'},{item:'Tamari (GF)',amount:'3 tbsp',shelf:'3 months open'},{item:'Sesame oil',amount:'1 tbsp',shelf:'12–18 months'},{item:'Garlic',amount:'4 cloves',shelf:'3–5 months'},{item:'Red bell pepper',amount:'1, diced',shelf:'1–2 weeks refrigerated'},{item:'Snap peas',amount:'1 cup',shelf:'3–5 days'},{item:'Fresh Thai basil or regular basil',amount:'1 cup packed',shelf:'3–5 days'},{item:'Green onions',amount:'3 stalks',shelf:'5–7 days'},{item:'Lime',amount:'1',shelf:'2–4 weeks refrigerated'},{item:'Coconut aminos (GF)',amount:'1 tbsp',shelf:'12 months open'}],
+instructions:['DAY-OLD RICE IS NON-NEGOTIABLE: Fresh rice has too much moisture and turns to mush. Cook rice the night before and refrigerate uncovered so it dries out.','Heat sesame oil in a wok over HIGH heat until almost smoking. High heat = wok hei (the slight char flavor that makes this taste like takeout).','Add crumbled tofu. Do not stir for 2 min — let it develop a crust. Then break it up like scrambled texture.','Add minced habanero and garlic. Stir-fry 1 min.','Add bell pepper and snap peas. Stir-fry 2 min on high — keep everything moving.','Add cold rice, breaking up any clumps. Pour tamari and coconut aminos over top. Toss everything continuously on high heat for 3–4 min until rice has a slight crisp on some grains.','Remove from heat. Fold in fresh basil — it wilts from the residual heat. Top with green onions, a squeeze of lime.'],
+nutrition:{calories:420,protein:22,carbs:58,fat:10,fiber:7},
+benefits:['Day-old rice develops resistant starch when refrigerated, which feeds gut bacteria and has a lower glycemic impact.','High-heat wok cooking preserves more nutrients than long low-heat cooking and reduces cooking time.','Thai basil is rich in eugenol, a natural anti-inflammatory compound with similar effects to aspirin.','Snap peas provide vitamin C, which dramatically increases iron absorption from the tofu and rice in this meal.']},
+
+{id:'e12',category:'evening',name:'Crispy Rice & Black Bean Burrito Bowl',skill:'beginner',budget:'cheap',weekendPrep:true,habanero:false,heat:1,kate:['🫙 Pickled jalapeños'],smoothie:false,rice:true,tagline:'The satisfying, no-drama weeknight bowl. Every ingredient earns its place.',prepTime:'10 min',cookTime:'20 min',servings:2,
+ingredients:[{item:'Jasmine or brown rice (dry)',amount:'1 cup',shelf:'4–5 years'},{item:'Black beans (canned)',amount:'1 can (15oz)',shelf:'2–3 years'},{item:'Romaine lettuce',amount:'2 cups, chopped',shelf:'5–7 days'},{item:'Corn (frozen)',amount:'1 cup',shelf:'12 months frozen'},{item:'Cherry tomatoes',amount:'1 cup, halved',shelf:'5–7 days'},{item:'Avocado',amount:'1',shelf:'2–3 days once ripe'},{item:'Pickled jalapeños',amount:'¼ cup',shelf:'3 months open'},{item:'GF corn tortilla chips',amount:'1 oz, crushed',shelf:'2–3 months sealed'},{item:'Lime',amount:'1',shelf:'2–4 weeks refrigerated'},{item:'Cumin',amount:'1 tsp',shelf:'3–4 years'},{item:'Olive oil',amount:'1 tbsp',shelf:'18–24 months'}],
+instructions:['Cook rice per package directions. For extra flavor, cook in vegetable broth instead of water.','Char the corn: screaming hot dry pan, no oil, no stirring for 2 min. Let it get black spots. That\'s flavor.','Season black beans with cumin, salt, lime juice, and olive oil. Warm briefly.','CRISPY RICE TRICK (optional but excellent): After rice is cooked, press a thin layer into a hot oiled pan. Cook undisturbed 3–4 min until a golden crust forms. Scrape and break it up for crunchy rice bits throughout.','Build the bowl: rice base → black beans → charred corn → chopped romaine → cherry tomatoes → avocado slices → pickled jalapeños.','Crush corn chips over the top just before eating for maximum crunch. Squeeze lime all over.'],
+nutrition:{calories:470,protein:16,carbs:72,fat:12,fiber:14},
+benefits:['Black beans are among the highest fiber legumes — 14g per can — supporting cholesterol reduction and sustained fullness.','The crispy rice technique creates textural variety that makes eating slower and more satisfying.','Romaine adds critical folate and vitamin K without adding significant calories to an already substantial bowl.','This bowl provides over half your daily fiber requirement in one meal — essential for gut health and appetite control.']},
+
+// ══ NEW SNACKS ══
+{id:'s9',category:'snack',name:'Popcorn with Nutritional Yeast & Herbs',skill:'beginner',budget:'cheap',weekendPrep:false,habanero:false,heat:0,kate:[],smoothie:false,rice:false,tagline:'The cheesy-tasting snack that has zero cheese. 100% crunchy.',prepTime:'3 min',cookTime:'5 min',servings:2,
+ingredients:[{item:'Popcorn kernels',amount:'½ cup',shelf:'2 years dry'},{item:'Coconut oil or vegan butter',amount:'1 tbsp',shelf:'Varies'},{item:'Nutritional yeast',amount:'3 tbsp',shelf:'2 years sealed'},{item:'Garlic powder',amount:'½ tsp',shelf:'3–4 years'},{item:'Smoked paprika',amount:'¼ tsp',shelf:'2–3 years'},{item:'Sea salt',amount:'to taste',shelf:'Indefinite'},{item:'Dried rosemary or thyme (optional)',amount:'¼ tsp',shelf:'1–3 years'}],
+instructions:['Pop kernels stovetop: heat oil in a large pot over medium-high. Add 3 test kernels, cover. When they pop, add remaining kernels in a single layer.','Cover and shake every 30 seconds. Remove from heat when popping slows to 2–3 seconds between pops.','Immediately transfer to a large bowl — kernels keep cooking in a hot pot.','While hot, drizzle with melted vegan butter or coconut oil. Toss to coat.','Sprinkle nutritional yeast, garlic powder, smoked paprika, and salt. Toss well — every kernel should be coated.','Eat immediately. Popcorn is best the moment it\'s made.'],
+nutrition:{calories:180,protein:8,carbs:22,fat:7,fiber:4},
+benefits:['Nutritional yeast provides B vitamins including B12 — the one nutrient most critical to supplement on a plant-based diet.','Popcorn is a whole grain with surprisingly high fiber per serving — far more than crackers or chips of equal calories.','Air-popped or lightly oiled popcorn has one of the best volume-to-calorie ratios of any snack food.','The "cheesy" umami flavor from nutritional yeast triggers genuine satisfaction without any dairy.']},
+
+{id:'s10',category:'snack',name:'Berry Protein Smoothie',skill:'beginner',budget:'cheap',weekendPrep:false,habanero:false,heat:0,kate:[],smoothie:true,rice:false,tagline:'Simple, fast, and built to keep you full between meals.',prepTime:'5 min',cookTime:'0 min',servings:1,
+ingredients:[{item:'Frozen mixed berries',amount:'1 cup',shelf:'12 months frozen'},{item:'Frozen banana (½, sliced before freezing)',amount:'½',shelf:'3 months frozen'},{item:'Unsweetened almond or oat milk (GF)',amount:'1 cup',shelf:'7–10 days open'},{item:'Pea protein powder (GF)',amount:'1 scoop (~25g)',shelf:'1–2 years'},{item:'Flaxseed (ground)',amount:'1 tbsp',shelf:'3 months ground / 1 year whole'},{item:'Almond butter (no added sugar)',amount:'1 tbsp',shelf:'1 year'},{item:'Handful of spinach (frozen is fine)',amount:'½ cup',shelf:'12 months frozen'}],
+instructions:['Blend liquid first, then frozen items — this keeps the blender from struggling.','Add frozen berries, banana, spinach, protein powder, flaxseed, and almond butter.','Blend 45–60 seconds until smooth and creamy. Frozen banana is what gives it a thick, milkshake-like texture.','If too thick, add a splash more milk. If not thick enough, add another chunk of frozen banana.','Drink immediately. This one holds up slightly longer than the green smoothie before texture changes.'],
+nutrition:{calories:340,protein:24,carbs:38,fat:9,fiber:8},
+benefits:['Mixed berries provide the highest antioxidant density of any fruit — they fight the oxidative stress caused by exercise.','Flaxseed is the richest plant source of ALA omega-3 fatty acids, supporting inflammation reduction and brain health.','Almond butter adds monounsaturated fats and magnesium, supporting muscle recovery and blood sugar stability.','At 24g of protein this smoothie genuinely bridges meals and prevents the muscle breakdown that happens with long gaps between eating.']}
+];
+
+let currentTab='all';
+const filterState={time:new Set(),skill:new Set(),budget:new Set(),feature:new Set()};
+
+function toggleFilterPanel(e){
+  e.stopPropagation();
+  const panel=document.getElementById('filterPanel');
+  const trigger=document.getElementById('filterTrigger');
+  const isOpen=panel.classList.toggle('open');
+  trigger.classList.toggle('open',isOpen);
+}
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('filterTriggerWrap');
+  if(wrap&&!wrap.contains(e.target)){
+    document.getElementById('filterPanel').classList.remove('open');
+    document.getElementById('filterTrigger').classList.remove('open');
+  }
+});
+function toggleChip(chip){
+  const group=chip.dataset.group;
+  const value=chip.dataset.value;
+  const selected=chip.classList.toggle('selected');
+  if(selected)filterState[group].add(value);
+  else filterState[group].delete(value);
+  renderActivePills();
+  applyFilters();
+  updateTriggerCount();
+}
+function clearAllFilters(){
+  ['time','skill','budget','feature'].forEach(g=>filterState[g].clear());
+  document.querySelectorAll('.filter-chip.selected').forEach(c=>c.classList.remove('selected'));
+  renderActivePills();
+  applyFilters();
+  updateTriggerCount();
+}
+function removeFilter(group,value){
+  filterState[group].delete(value);
+  const chip=document.querySelector(`.filter-chip[data-group="${group}"][data-value="${value}"]`);
+  if(chip)chip.classList.remove('selected');
+  renderActivePills();
+  applyFilters();
+  updateTriggerCount();
+}
+function updateTriggerCount(){
+  const total=filterState.time.size+filterState.skill.size+filterState.budget.size+filterState.feature.size;
+  const chip=document.getElementById('filterCountChip');
+  chip.textContent=total;
+  chip.style.display=total>0?'inline-block':'none';
+}
+function renderActivePills(){
+  const container=document.getElementById('activePills');
+  container.innerHTML='';
+  const labels={time:{morning:'🌅 Morning',evening:'🌙 Evening',snack:'🔥 Snack'},skill:{beginner:'Beginner',comfortable:'Comfortable',experienced:'Experienced'},budget:{cheap:'💚 Cheap',moderate:'🟡 Moderate'},feature:{habanero:'🌶️ Habanero',smoothie:'🥤 Smoothie',rice:'🍚 Rice Dish',weekendPrep:'🗓 Weekend Prep',kate:'🫒 Kate Favorites'}};
+  ['time','skill','budget','feature'].forEach(group=>{
+    filterState[group].forEach(value=>{
+      const pill=document.createElement('div');
+      pill.className='active-pill';
+      pill.innerHTML=`<span>${labels[group][value]}</span><button onclick="removeFilter('${group}','${value}')" title="Remove">×</button>`;
+      container.appendChild(pill);
+    });
+  });
+}
+function matchesFilters(meal){
+  if(filterState.time.size>0&&!filterState.time.has(meal.category))return false;
+  if(filterState.skill.size>0&&!filterState.skill.has(meal.skill))return false;
+  if(filterState.budget.size>0&&!filterState.budget.has(meal.budget))return false;
+  if(filterState.feature.has('habanero')&&!meal.habanero)return false;
+  if(filterState.feature.has('smoothie')&&!meal.smoothie)return false;
+  if(filterState.feature.has('rice')&&!meal.rice)return false;
+  if(filterState.feature.has('weekendPrep')&&!meal.weekendPrep)return false;
+  if(filterState.feature.has('kate')&&(!meal.kate||meal.kate.length===0))return false;
+  return true;
+}
+function renderGrid(containerId,emptyId,meals){
+  const grid=document.getElementById(containerId);
+  const empty=document.getElementById(emptyId);
+  if(!grid)return 0;
+  grid.innerHTML='';
+  let visible=0;
+  meals.forEach(m=>{
+    const card=createCard(m,containerId==='all-grid');
+    const show=matchesFilters(m);
+    if(!show)card.classList.add('hidden');
+    else visible++;
+    grid.appendChild(card);
+  });
+  if(empty)empty.classList.toggle('show',visible===0);
+  return visible;
+}
+function applyFilters(){
+  const byCategory=cat=>ALL_MEALS.filter(m=>m.category===cat);
+  const timeSection=document.getElementById('timeSectionEl');
+  if(timeSection)timeSection.classList.toggle('show',currentTab==='all');
+  let totalVisible=0;
+  if(currentTab==='all')totalVisible=renderGrid('all-grid','all-empty',ALL_MEALS);
+  else if(currentTab==='morning')totalVisible=renderGrid('morning-grid','morning-empty',byCategory('morning'));
+  else if(currentTab==='evening')totalVisible=renderGrid('evening-grid','evening-empty',byCategory('evening'));
+  else if(currentTab==='snacks')totalVisible=renderGrid('snacks-grid','snacks-empty',byCategory('snack'));
+  const countEl=document.getElementById('visibleCount');
+  if(countEl&&currentTab!=='fitness'){
+    const totalSource=currentTab==='all'?ALL_MEALS.length:byCategory(currentTab==='snacks'?'snack':currentTab).length;
+    countEl.textContent='Showing '+totalVisible+' of '+totalSource;
+  }else if(countEl){countEl.textContent='';}
+}
+function createCard(m,showTimeBadge){
+  const div=document.createElement('div');
+  div.className='meal-card';
+  let heatHtml='<div class="heat-dots">';
+  for(let i=1;i<=3;i++)heatHtml+=`<div class="heat-dot ${i<=m.heat?'on':''}"></div>`;
+  heatHtml+='</div>';
+  const kateBadges=(m.kate||[]).map(k=>`<span class="badge badge-kate">${k}</span>`).join('');
+  const prepBadge=m.weekendPrep?'<span class="badge badge-prep">🗓 Prep</span>':'';
+  const habBadge=m.habanero?'<span class="badge badge-habanero">🌶️ Habanero</span>':'';
+  const smoothieBadge=m.smoothie?'<span class="badge badge-smoothie">🥤 Smoothie</span>':'';
+  const riceBadge=m.rice?'<span class="badge badge-rice">🍚 Rice</span>':'';
+  const timeBadge=showTimeBadge?`<span class="badge badge-time-${m.category}">${m.category==='morning'?'🌅 Morning':m.category==='evening'?'🌙 Evening':'🔥 Snack'}</span>`:'';
+  const ingRows=m.ingredients.map(i=>`<tr><td>${i.item}</td><td>${i.amount}</td><td>${i.shelf}</td></tr>`).join('');
+  const steps=m.instructions.map((s,i)=>`<div class="instruction-step"><div class="step-num">${i+1}</div><div class="step-text">${s}</div></div>`).join('');
+  const maxP=50,maxC=100,maxF=40,maxFib=30;
+  const pct=(v,mx)=>Math.min(100,Math.round(v/mx*100));
+  const benefitsList=m.benefits.map(b=>`<div class="benefit-item"><span class="benefit-icon">✦</span><span>${b}</span></div>`).join('');
+  div.innerHTML=`<div class="meal-card-inner"><div class="meal-badges">${timeBadge}<span class="badge badge-skill-${m.skill}">${m.skill.charAt(0).toUpperCase()+m.skill.slice(1)}</span><span class="badge badge-${m.budget}">${m.budget==='cheap'?'💚 Cheap':'🟡 Moderate'}</span>${prepBadge}${habBadge}${smoothieBadge}${riceBadge}${kateBadges}${heatHtml}</div><div class="meal-name">${m.name}</div><div class="meal-tagline">${m.tagline}</div><div class="meal-meta"><span>⏱ Prep: ${m.prepTime}</span><span>🔥 Cook: ${m.cookTime}</span><span>🍽 Serves: ${m.servings}</span></div><button class="expand-btn" onclick="toggleDetail('${m.id}',this)">View Full Recipe<svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 4l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="meal-detail" id="detail-${m.id}"><div class="detail-tabs"><button class="detail-tab active" onclick="switchDetailTab('${m.id}','ingredients',this)">Ingredients</button><button class="detail-tab" onclick="switchDetailTab('${m.id}','instructions',this)">Instructions</button><button class="detail-tab" onclick="switchDetailTab('${m.id}','nutrition',this)">Nutrition</button><button class="detail-tab" onclick="switchDetailTab('${m.id}','benefits',this)">Body Benefits</button></div><div class="detail-pane active" id="${m.id}-ingredients"><table class="ingredients-table"><thead><tr><th>Ingredient</th><th>Amount</th><th>Shelf Life</th></tr></thead><tbody>${ingRows}</tbody></table></div><div class="detail-pane" id="${m.id}-instructions">${steps}</div><div class="detail-pane" id="${m.id}-nutrition"><div class="nutrition-grid"><div class="nutrition-card"><div class="nutrition-label">Calories</div><div class="nutrition-value">${m.nutrition.calories}<span>kcal</span></div></div><div class="nutrition-card"><div class="nutrition-label">Protein</div><div class="nutrition-value">${m.nutrition.protein}<span>g</span></div></div><div class="nutrition-card"><div class="nutrition-label">Carbohydrates</div><div class="nutrition-value">${m.nutrition.carbs}<span>g</span></div></div><div class="nutrition-card"><div class="nutrition-label">Fiber</div><div class="nutrition-value">${m.nutrition.fiber}<span>g</span></div></div></div><div class="bar-wrap"><div class="bar-row"><div class="bar-labels"><span>Protein</span><span>${m.nutrition.protein}g</span></div><div class="bar"><div class="bar-fill bar-protein" style="width:${pct(m.nutrition.protein,maxP)}%"></div></div></div><div class="bar-row"><div class="bar-labels"><span>Carbs</span><span>${m.nutrition.carbs}g</span></div><div class="bar"><div class="bar-fill bar-carbs" style="width:${pct(m.nutrition.carbs,maxC)}%"></div></div></div><div class="bar-row"><div class="bar-labels"><span>Fat</span><span>${m.nutrition.fat}g</span></div><div class="bar"><div class="bar-fill bar-fat" style="width:${pct(m.nutrition.fat,maxF)}%"></div></div></div><div class="bar-row"><div class="bar-labels"><span>Fiber</span><span>${m.nutrition.fiber}g</span></div><div class="bar"><div class="bar-fill bar-fiber" style="width:${pct(m.nutrition.fiber,maxFib)}%"></div></div></div></div></div><div class="detail-pane" id="${m.id}-benefits">${benefitsList}</div></div></div>`;
+  return div;
+}
+function toggleDetail(id,btn){
+  const detail=document.getElementById('detail-'+id);
+  const open=detail.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  btn.childNodes[0].nodeValue=open?'Hide Recipe':'View Full Recipe';
+}
+function switchDetailTab(mealId,pane,btn){
+  const detail=document.getElementById('detail-'+mealId);
+  detail.querySelectorAll('.detail-tab').forEach(t=>t.classList.remove('active'));
+  detail.querySelectorAll('.detail-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(mealId+'-'+pane).classList.add('active');
+}
+function switchTab(tab,el){
+  currentTab=tab;
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('filterToolbar').classList.toggle('hidden',tab==='fitness');
+  const timeSection=document.getElementById('timeSectionEl');
+  if(timeSection)timeSection.classList.toggle('show',tab==='all');
+  if(tab!=='all'){
+    filterState.time.clear();
+    document.querySelectorAll('.filter-chip[data-group="time"]').forEach(c=>c.classList.remove('selected'));
+    renderActivePills();
+    updateTriggerCount();
+  }
+  applyFilters();
+}
+document.getElementById('timeSectionEl').classList.add('show');
+applyFilters();
+</script>
+</body>
+</html>
